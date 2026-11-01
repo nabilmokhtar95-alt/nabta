@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+# the service worker and the manifest must always be fresh so updates reach installed phones
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "no-cache"
