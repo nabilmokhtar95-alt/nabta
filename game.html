@@ -2736,7 +2736,15 @@ function idleHint(){
 let voice=null;
 function pickVoice(){try{const v=speechSynthesis.getVoices();voice=v.find(x=>/ar[-_]EG/i.test(x.lang)&&/natural|neural|online|salma|shakir/i.test(x.name))||v.find(x=>/ar[-_]EG/i.test(x.lang)||/egypt|مصر|salma|shakir/i.test(x.name))||v.find(x=>/^ar/i.test(x.lang))||null}catch(e){}}
 try{speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}catch(e){}
-function speak(t){if(S.voice===false||!t)return;try{const u=new SpeechSynthesisUtterance(t.replace(/[\u{1F000}-\u{1FAFF}☀-➿️]/gu,''));u.lang=voice?voice.lang:'ar-EG';if(voice)u.voice=voice;u.rate=.9;u.pitch=1.15;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+/* voice pack: recorded Egyptian voice files (voice/index.json maps sentence → mp3); anything not recorded falls back to the phone's voice */
+const VNORM=t=>String(t).replace(/[\u{1F000}-\u{1FAFF}☀-➿️‍]/gu,'').replace(/[«»"'…!?؟،,.:\-–()]/g,' ').replace(/\s+/g,' ').trim();
+const VP={map:null,cur:null};
+try{fetch('voice/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&typeof j==='object'){VP.map={};for(const k in j)VP.map[VNORM(k)]=j[k]}}).catch(()=>{})}catch(e){}
+function speak(t){if(S.voice===false||!t)return;try{window.__spoken&&window.__spoken.push(t)}catch(e){}
+  const f=VP.map&&VP.map[VNORM(t)];
+  if(f){try{speechSynthesis.cancel()}catch(e){}try{if(VP.cur){VP.cur.pause();VP.cur=null}const au=new Audio('voice/'+f);au.volume=1;VP.cur=au;au.play().catch(()=>{VP.cur=null;speakTTS(t)})}catch(e){speakTTS(t)}return}
+  speakTTS(t)}
+function speakTTS(t){if(VP.cur){try{VP.cur.pause()}catch(e){}VP.cur=null}try{const u=new SpeechSynthesisUtterance(t.replace(/[\u{1F000}-\u{1FAFF}☀-➿️]/gu,''));u.lang=voice?voice.lang:'ar-EG';if(voice)u.voice=voice;u.rate=.9;u.pitch=1.15;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 const sayBtn='<button class="sayb" data-say aria-label="نسمع السؤال تاني">🔊</button>';
 /* colour objects */
 const CLRS=[
