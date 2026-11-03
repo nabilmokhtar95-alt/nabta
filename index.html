@@ -264,7 +264,7 @@ footer .brand img{height:44px}
 @supports (animation-timeline:view()){
  @media (prefers-reduced-motion:no-preference){
   .pk,.bedc,.mini,.step{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
-  @keyframes rise{from{opacity:.25;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes rise{from{transform:translateY(28px) scale(.97)}to{transform:none}}
  }
 }
 .sort{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--muted)}
@@ -390,6 +390,14 @@ footer .brand img{height:44px}
 .sbt{display:inline-flex;align-items:center;gap:6px;border:0;text-decoration:none;font-weight:700;border-radius:16px;padding:12px 20px;color:#fff}
 .sbt.wa{background:#1fa855}.sbt.fbk{background:#1877f2}.sbt.cp{background:var(--ink);color:var(--paper)}
 .shu{direction:ltr;text-align:left;font-size:13px;color:var(--muted);background:var(--paper);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.facts2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0 0;padding:0;background:var(--card);border-radius:24px;box-shadow:var(--shadow)}
+.facts2>div{padding:16px 18px;display:grid;gap:2px;border-inline-start:1px solid var(--line)}.facts2>div:first-child{border-inline-start:0}
+.facts2 dt{font-family:var(--display);font-size:clamp(30px,3.6vw,44px);line-height:1;color:var(--teal-d);font-variant-numeric:tabular-nums}
+.facts2 dd{margin:0;color:var(--muted);font-size:14.5px;font-weight:600}
+@media (max-width:640px){.facts2{grid-template-columns:repeat(2,minmax(0,1fr))}.facts2>div:nth-child(3){border-inline-start:0}.facts2>div:nth-child(n+3){border-top:1px solid var(--line)}}
+.more{grid-column:1/-1;display:flex;justify-content:center;padding-top:8px}
+.hh{text-wrap:balance}
+h1.hh{font-size:clamp(38px,4.8vw,66px)}h1.hh em::after{display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 
@@ -407,6 +415,13 @@ footer .brand img{height:44px}
   <div class="hs-nav"><button type="button" class="hs-a" id="hsPrev" aria-label="اللي قبلها">›</button><button type="button" class="hs-a" id="hsNext" aria-label="اللي بعدها">‹</button></div>
  </div>
 </div></section>
+
+<div class="in"><dl class="facts2" aria-label="نبتة بالأرقام">
+ <div><dt>٣٥</dt><dd>لعبة حقيقية بصورها</dd></div>
+ <div><dt>٧</dt><dd>أقسام من البيبي للحركة</dd></div>
+ <div><dt>٩</dt><dd>مهارات واضحة لكل لعبة</dd></div>
+ <div><dt>٤٥</dt><dd>لعبة في الجنينة ببلاش</dd></div>
+</dl></div>
 
 <section class="ruler" id="ages"><div class="in">
  <span class="eyebrow">مسطرة النمو</span><h2>طفلكم عنده كام سنة؟</h2>
@@ -519,7 +534,7 @@ const ageTxt=t=>t.ageL||'سن '+AR(t.age)+'+';
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const TOYGAME={"shapebox": [["shapes", "🔺", "الأشكال"], ["opp", "🔄", "العكس"]], "dino": [["color", "🎨", "الألوان"], ["memory", "🧠", "الذاكرة"]], "tablet": [["letter", "🔤", "أول حرف"], ["trace", "✍️", "نرسم سوا"]], "blocks": [["puzzle", "🧩", "البازل"], ["pattern", "🔁", "كمّل النمط"]], "lego": [["maze", "🌀", "المتاهة"], ["build", "🧱", "ابني زي الصورة"]], "magnet": [["sort", "📏", "من الصغير للكبير"], ["healthy", "🥦", "أكل صحي"]], "cube": [["count", "🔢", "نعد سوا"], ["bubbles", "🫧", "فقاقيع الأرقام"]], "kitchen": [["food", "🥕", "بياكل إيه؟"], ["feed", "🥕", "أكّل الحيوان"]], "fish": [["fishing", "🎣", "صياد السمك"], ["catch", "🧺", "اصطاد الفاكهة"]], "cars30": [["race", "🚗", "سباق نبتة"], ["transport", "✈️", "بتمشي فين؟"]], "pianomat": [["simon", "🎵", "تابع اللحن"]], "rattles": [["feel", "😊", "مشاعري"]], "spinner": [["whack", "🐛", "اطرد الدود"]], "balls": [["color", "🎨", "الألوان"]], "babyphone": [["count", "🔢", "نعد سوا"]], "sippycup": [["healthy", "🥦", "أكل صحي"]], "bathseat": [["bubbles", "🫧", "فقاقيع الأرقام"]], "foammat": [["letter", "🔤", "أول حرف"]], "octopus": [["fishing", "🎣", "صياد السمك"]], "fruitapple": [["food", "🥕", "بياكل إيه؟"], ["catch", "🧺", "اصطاد الفاكهة"]], "kitchenware": [["healthy", "🥦", "أكل صحي"]], "takeapart": [["build", "🧱", "ابني زي الصورة"]], "animalpuzzle": [["home", "🏡", "بيت مين؟"], ["puzzle", "🧩", "البازل"]], "magboard": [["paint", "🎨", "نلوّن سوا"]], "markers": [["paint", "🎨", "نلوّن سوا"], ["trace", "✍️", "نرسم سوا"]], "watergun": [["balloons", "🎈", "فرقع البلالين"]], "boxing": [["whack", "🐛", "اطرد الدود"]], "trike": [["race", "🚗", "سباق نبتة"]], "goal2in1": [["balloons", "🎈", "فرقع البلالين"]], "gearblocks": [["build", "🧱", "ابني زي الصورة"], ["pattern", "🔁", "كمّل النمط"]], "giraffeboard": [["trace", "✍️", "نرسم سوا"], ["paint", "🎨", "نلوّن سوا"]], "scooter": [["race", "🚗", "سباق نبتة"]], "kitchen37": [["food", "🥕", "بياكل إيه؟"]], "eggs": [["shapes", "🔺", "الأشكال"]]};
 const STAGES=[[0,'بذرة','من الولادة','g_seed',54],[1.5,'نبتة صغيرة','سنة ونص لسنتين','g_sprout',78],[3,'نبتة','٣ سنين','g_grow',104],[6,'وردة','٤ لـ ٦ سنين','g_ready',128]];
-let cat='all',age=null,query='',sortBy='pick';
+let cat='all',age=null,query='',sortBy='pick',showAll=false;
 let favs={};try{favs=JSON.parse(localStorage.getItem('nabta-fav')||'{}')||{}}catch(e){}
 const saveFav=()=>{try{localStorage.setItem('nabta-fav',JSON.stringify(favs))}catch(e){}};
 const vt=fn=>document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches?document.startViewTransition(fn):fn();
@@ -532,7 +547,7 @@ const fits=(t,a)=>a==null||(t.age<=a&&!(a>=3&&t.cat==='baby'));
 
 (function(){
  const SL=[
-  {k:'كل لعبة بذرة',h:'وطفلك <em>هو اللي بيكبر</em>',p:'ألعاب تعليمية حقيقية من الولادة لحد ٦ سنين، وكل لعبة مكتوب عليها بتنمّي إيه.',c:['#0a9fa1','#b6d814','#06686a'],ids:['dino','cube','fish'],cta:['تسوّقوا الألعاب','#shop']},
+  {k:'متجر نبتة للألعاب التعليمية',h:'كل لعبة بذرة، وطفلك <em>هو اللي بيكبر</em>',p:'ألعاب تعليمية حقيقية من الولادة لحد ٦ سنين، وكل لعبة مكتوب عليها بتنمّي إيه.',c:['#0a9fa1','#b6d814','#06686a'],ids:['dino','cube','fish'],cta:['تسوّقوا الألعاب','#shop']},
   {k:'جديد للبيبي',h:'أول لعبة <em>لأول حضن</em>',p:'سجادة البيانو والشخاليل وكور السيليكون… حواس وأصوات وألوان من أول يوم.',c:['#e8127c','#ffb3d6','#8a0a4c'],ids:['pianomat','balls','rattles'],cta:['ألعاب البيبي','bed:baby']},
   {k:'لعب وتخيّل',h:'مطبخ صغير <em>وشيف كبير</em>',p:'بوتاجاز بينوّر وحنفية بتنزّل مية بجد. يقلّد ويتكلم ويتخيّل.',c:['#ff7a1a','#ffd23f','#9a3d00'],ids:['kitchen','fruitapple','kitchen37'],cta:['ألعاب التخيّل','bed:pretend']},
   {k:'حركة ونشاط',h:'طاقة كتير؟ <em>يفرّغها صح</em>',p:'بوكسينج ١٢٠ سم، واسكوتر بينوّر، وجون وسلة في لعبة واحدة.',c:['#1f8fd6','#7fe0ff','#0b4a7a'],ids:['boxing','scooter','goal2in1'],cta:['ألعاب الحركة','bed:move']},
@@ -542,7 +557,7 @@ const fits=(t,a)=>a==null||(t.age<=a&&!(a>=3&&t.cat==='baby'));
  const shapes='<i class="sh s1"></i><i class="sh s2"></i><i class="sh s3"></i><i class="sh s4"></i><i class="sh s5"></i>';
  tr.innerHTML=SL.map((x,k)=>`<article class="hsl ${k?'':'on'}" style="--a:${x.c[0]};--b:${x.c[1]};--d:${x.c[2]}" aria-hidden="${!!k}">
   <div class="aur"></div>${shapes}
-  <div class="txt"><span class="kk">${x.k}</span><h2 class="hh">${x.h}</h2><p>${x.p}</p><a class="hcta" href="#" data-cta="${x.cta[1]}">${x.cta[0]}</a></div>
+  <div class="txt"><span class="kk">${x.k}</span>${k?`<h2 class="hh">${x.h}</h2>`:`<h1 class="hh">${x.h}</h1>`}<p>${x.p}</p><a class="hcta" href="#" data-cta="${x.cta[1]}">${x.cta[0]}</a></div>
   <div class="vis">${x.game?`<div class="phn3"><img src="img/shot_garden.webp" alt=""><span>▶</span></div>`:x.ids.map((id,n)=>{const t=byId[id];return t?`<button type="button" class="fc f${n}" data-open="${id}" aria-label="${esc(t.n)}"><img src="${img(t)}" alt="" ${k?'loading="lazy"':''}><b>${t.n}</b></button>`:''}).join('')}</div>
  </article>`).join('');
  bars.innerHTML=SL.map((x,k)=>`<button type="button" class="bar1" data-hs="${k}" aria-label="${x.k}"><i></i></button>`).join('');
@@ -578,7 +593,8 @@ function grid(){const qq=query.trim().toLowerCase();let L=TOYS.filter(t=>(sortBy
  if(sortBy==='new')L=[...L.filter(t=>t.badge==='جديد'),...L.filter(t=>t.badge!=='جديد')];else if(sortBy==='young')L=[...L].sort((a,b)=>a.age-b.age);
  const st=STAGES.find(s=>s[0]===age);
  $('#count').textContent=(st?'مرحلة «'+st[1]+'» · ':'')+AR(L.length)+' من '+AR(TOYS.length)+' لعبة';
- $('#grid').innerHTML=L.length?L.map(card).join(''):(sortBy==='fav'?'<p class="empty">لسه مفيش مفضلة. دوسوا 🤍 على أي لعبة عجبتكم.</p>':'<p class="empty">مفيش ألعاب بالاختيار ده. جرّبوا قسم أو مرحلة تانية، أو امسحوا البحث.</p>')}
+ const cut=!showAll&&cat==='all'&&age==null&&!qq&&sortBy==='pick'&&L.length>12,LL=cut?L.slice(0,12):L;
+ $('#grid').innerHTML=L.length?LL.map(card).join('')+(cut?`<div class="more"><button type="button" class="btn s" data-more>اعرض الـ${AR(L.length)} لعبة كلها ↓</button></div>`:''):(sortBy==='fav'?'<p class="empty">لسه مفيش مفضلة. دوسوا 🤍 على أي لعبة عجبتكم.</p>':'<p class="empty">مفيش ألعاب بالاختيار ده. جرّبوا قسم أو مرحلة تانية، أو امسحوا البحث.</p>')}
 
 let qAge=3,qGoal=GOALS[0][0];
 function quiz(){
@@ -656,6 +672,7 @@ document.addEventListener('click',e=>{const T=e.target;
  const bd=T.closest('[data-bed]');if(bd){cat=bd.dataset.bed;chips();grid();$('#shop').scrollIntoView({behavior:'smooth'});return}
  const c=T.closest('[data-cat]');if(c){cat=c.dataset.cat;chips();grid();return}
  const ad=T.closest('[data-add]');if(ad){addCart(ad.dataset.add);return}
+ if(T.closest('[data-more]')){showAll=true;grid();return}
  const nw=T.closest('[data-nw]');if(nw){const r=$('#newRow');r.scrollBy({left:(+nw.dataset.nw)*r.clientWidth*.8,behavior:'smooth'});return}
  const fv=T.closest('[data-fav]');if(fv){e.preventDefault();toggleFav(fv.dataset.fav);return}
  if(T.closest('[data-share]')){const id=$('#prod').dataset.id,u=location.href.split('#')[0]+'#p-'+id;try{navigator.clipboard.writeText(u).then(()=>toast('اتنسخ لينك اللعبة 🔗'),()=>toast(u))}catch(_){toast(u)}return}
