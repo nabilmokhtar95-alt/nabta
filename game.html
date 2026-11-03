@@ -1642,6 +1642,12 @@ body.ingame #mas{bottom:calc(6px + env(safe-area-inset-bottom,0px))}
 #aStart .tip{cursor:pointer}
 body.ontitle #kg *,body.ontitle .amb,body.ontitle .cloud{animation-play-state:paused!important}
 .gcard.off *,.gcard.off *::after,.gcard.off *::before{animation-play-state:paused!important}
+
+/* boot: the start screen paints long before the game script arrives on slow phones — show that it's loading and hold taps */
+html.boot #tPlay,html.boot #tGarden{pointer-events:none;opacity:.55;filter:saturate(.6)}
+html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:50;background:#fff;color:#0b6f71;font-weight:800;font-size:16px;border-radius:999px;padding:10px 22px 14px;box-shadow:0 6px 18px rgba(0,0,0,.18);
+ background-image:linear-gradient(90deg,#7ad35b,#0faeb0,#7ad35b);background-size:200% 5px;background-repeat:no-repeat;background-position:0 100%;animation:bootbar 1.2s linear infinite}
+@keyframes bootbar{to{background-position:-200% 100%}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0faeb0">
@@ -1653,6 +1659,7 @@ body.ontitle #kg *,body.ontitle .amb,body.ontitle .cloud{animation-play-state:pa
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 </head><body>
 
+<script>document.documentElement.classList.add('boot')</script>
 
 <div class="sky" id="sky">
   <div class="stars" id="stars"></div>
@@ -5766,7 +5773,7 @@ function start(seed){
   if(!S.brand){if(S.look.pot==='terra')S.look.pot='nabta';if(S.look.leaf==='green')S.look.leaf='nabta';S.brand=1}if(S.hats||S.hat){for(const h in(S.hats||{})){if(h==='glasses')S.ward['face:sun']=1;else S.ward['head:'+h]=1}
     if(S.hat==='glasses')S.look.face='sun';else if(S.hat&&S.hat!=='none'&&itemOf('head',S.hat).id===S.hat)S.look.head=S.hat;delete S.hats;delete S.hat}
   S.album=S.album||{};S.badges=S.badges||{};checkBadges(true);S.decor=S.decor||{};S.barn=S.barn||{};fillOrders();fillQuests();buildPlots();initStars();renderDecor();renderTrees();catchUp();renderPlots(true);updateQuestBar();updateTop();updateGardenTools();renderOrders();setMusic();
-  openTitle();
+  openTitle();document.documentElement.classList.remove('boot');
   // deep links from the store: #g=<game id> opens that game, #toys opens our toys
   const deep=()=>{const h=location.hash,m=h.match(/g=(\w+)/),id=m&&m[1];const go=t=>{$('#title').hidden=true;document.body.classList.remove('ontitle');overlayOn=null;setTab(t)};
     if(id&&GAMES.some(g=>g.id===id)){go('play');setTimeout(()=>openGame(id),120)}else if(/toys/.test(h))go('toys')};
@@ -5780,7 +5787,7 @@ window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.ho
 })();
 </script>
 
-<style>.pwa-inst{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:500;display:flex;align-items:center;gap:8px;background:#fff;color:#0b6f71;font-weight:800;font-size:16px;border:0;border-radius:999px;padding:10px 18px;box-shadow:0 5px 0 #0b8587,0 10px 24px rgba(0,0,0,.2);font-family:inherit}.pwa-inst b{font-size:22px}.pwa-inst i{font-style:normal;opacity:.5;margin-inline-start:6px}</style>
+<style>.pwa-inst{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));translate:-50% 0;z-index:500;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 24px);background:#fff;color:#0b6f71;font-weight:800;font-size:13.5px;line-height:1.35;text-align:start;border:0;border-radius:999px;padding:10px 18px;box-shadow:0 5px 0 #0b8587,0 10px 24px rgba(0,0,0,.2);font-family:inherit}.pwa-inst b{font-size:22px}.pwa-inst i{font-style:normal;opacity:.5;margin-inline-start:6px}</style>
 <script>
 (()=>{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(standalone)return;
@@ -5788,7 +5795,7 @@ window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.ho
    b.onclick=e=>{if(e.target.closest('[data-x]')){b.remove();try{localStorage.setItem('nabta-pwa-x','1')}catch(_){}return}fn&&fn(b)};document.body.appendChild(b)};
  try{if(localStorage.getItem('nabta-pwa-x'))return}catch(_){}
  addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;show('نثبّت اللعبة على الموبايل',b=>{dp.prompt();dp.userChoice.finally(()=>b.remove())})});
- if(/iphone|ipad|ipod/i.test(navigator.userAgent))setTimeout(()=>show('للتثبيت: زرار المشاركة ⬆️ ثم «إضافة إلى الشاشة الرئيسية»',b=>b.remove()),2500);
+ if(/iphone|ipad|ipod/i.test(navigator.userAgent))setTimeout(()=>{if(!document.documentElement.classList.contains('boot'))show('للتثبيت: ⬆️ مشاركة ثم «إضافة إلى الشاشة الرئيسية»',b=>b.remove())},6000);
 })();
 </script>
 </body></html>

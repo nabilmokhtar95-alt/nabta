@@ -1,0 +1,12 @@
+const {chromium,devices}=require('playwright');
+(async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13']});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.addInitScript(()=>{Date.prototype.getHours=function(){return 14};if(!sessionStorage.x){sessionStorage.x=1;const Z=(e,n,f,full)=>({e,n,food:f,lvl:0,xp:0,full,joy:.8,t:Date.now()});localStorage.setItem('nabta-garden',JSON.stringify({v:1,named:1,brand:1,gtut:1,coins:3,level:6,age:4,dailyGift:1,
+ zoo:[Z('🐰','أرنوب','carrot',.9),Z('🐢','سلحوفة','tulip',.9),Z('🐥','كتكوت','strawberry',.9),Z('🐑','خروفة','sunflower',.9),Z('🦔','قنفود','tomato',.9),Z('🐪','جمل','corn',.2)]}))}});
+await p.goto('file://'+process.cwd()+'/test28.html');await p.waitForTimeout(900);await p.evaluate(()=>document.querySelector('#tPlay').click());await p.waitForTimeout(1500);await p.evaluate(()=>{document.querySelectorAll('#scrim.open [data-close]').forEach(e=>e.click())});await p.waitForTimeout(2500);
+console.log('seeds',await p.evaluate(()=>[...document.querySelectorAll('[data-ngs]')].map(b=>b.dataset.ngs+':'+b.textContent).join(' ')));
+await p.screenshot({path:'w7/corn0.png'});
+const e=await p.$('[data-ngs="corn"]');const bb=await e.boundingBox();await p.mouse.click(bb.x+bb.width/2,bb.y+bb.height/2);await p.waitForTimeout(2500);
+await p.evaluate(()=>{__T.S.plots.forEach(x=>{if(x)x.growth=1})});await p.waitForTimeout(800);
+const G=await p.evaluate(()=>{const g=NG.game.scene.getScene('garden'),D=NG.D,cv=document.querySelector('#gGame').getBoundingClientRect();const i=__T.S.plots.findIndex(x=>x&&x.type==='corn');return{bx:cv.left+g.beds[i].x/D,by:cv.top+(g.bedY-40*D)/D}});
+await p.mouse.click(G.bx,G.by);await p.waitForTimeout(2500);const chip=await p.evaluate(()=>document.querySelector('#ngTask').innerText);console.log('chip after harvest',JSON.stringify(chip));await p.evaluate(()=>{const g=NG.game.scene.getScene('garden');const A=g.arrows.find(A=>A.dir>0&&A.c.visible);if(A)A.c.emit('pointerdown')});await p.waitForTimeout(1200);const G2=await p.evaluate(()=>{const g=NG.game.scene.getScene('garden'),D=NG.D,cv=document.querySelector('#gGame').getBoundingClientRect();const q=g.pets.find(q=>q.a.e==='🐪');return{px:cv.left+q.x/D,py:cv.top+(g.petY-q.h/2)/D}});G.px=G2.px;G.py=G2.py;await p.mouse.click(G.px,G.py);await p.waitForTimeout(2000);await p.screenshot({path:'w7/corn1.png'});
+console.log('ERR',errs,await p.evaluate(()=>JSON.stringify([__T.S.coins,__T.S.zoo[5].full,__T.S.barn])));await b.close()})();

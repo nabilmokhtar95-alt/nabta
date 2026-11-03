@@ -1,0 +1,23 @@
+const {chromium}=require('playwright');
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1366,height:768}});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.addInitScript(()=>{Date.prototype.getHours=function(){return 14};if(!sessionStorage.x){sessionStorage.x=1;localStorage.setItem('nabta-garden',JSON.stringify({v:1,named:1,brand:1,gtut:1,coins:60,level:2,age:4,adv2:1,plots:[{type:'carrot',growth:.3,water:0},null,null],
+ zoo:[{e:'🐰',n:'أرنوب',food:'carrot',lvl:0,xp:0,full:.9,joy:.6,t:Date.now()},{e:'🐥',n:'كتكوت',food:'tulip',lvl:1,xp:0,full:.9,joy:.8,t:Date.now()}]}))}});
+await p.goto('file://'+process.cwd()+'/test28.html');await p.waitForTimeout(900);await p.evaluate(()=>document.querySelector('#tPlay').click());await p.waitForTimeout(1500);await p.evaluate(()=>{document.querySelectorAll('#scrim.open [data-close]').forEach(e=>e.click())});await p.waitForTimeout(3500);
+const gw=()=>p.evaluate(()=>[NG.game.scale.width,document.querySelector('#gGame').clientWidth]);
+console.log('garden size',JSON.stringify(await gw()));
+const g0=await p.evaluate(()=>{const g=NG.game.scene.getScene('garden');return[Math.round(g.nab.x),Math.round(g.nab.y),g.beds[0].x]});
+await p.keyboard.down('ArrowLeft');await p.waitForTimeout(700);await p.keyboard.up('ArrowLeft');await p.keyboard.down('ArrowDown');await p.waitForTimeout(700);await p.keyboard.up('ArrowDown');
+const g1=await p.evaluate(()=>{const g=NG.game.scene.getScene('garden');return[Math.round(g.nab.x),Math.round(g.nab.y)]});
+await p.keyboard.press('Space');await p.waitForTimeout(2500);const w=await p.evaluate(()=>__T.S.plots[0].water);console.log('garden kb',JSON.stringify([g0,g1,'water',w]));
+await p.setViewportSize({width:900,height:700});await p.waitForTimeout(2500);console.log('after resize',JSON.stringify(await gw()));
+await p.screenshot({path:'w10/kb_g.png'});
+await p.setViewportSize({width:1366,height:768});await p.waitForTimeout(2000);
+await p.evaluate(()=>document.querySelector('[data-tab="map"]').click());await p.waitForTimeout(1200);await p.evaluate(()=>document.querySelector('.anode.next').click());await p.waitForTimeout(2500);
+await p.screenshot({path:'w10/kb_intro.png'});await p.keyboard.press('Enter');await p.waitForTimeout(500);
+const a0=await p.evaluate(()=>{const sc=__T.ADV.game.scene.getScene('adv');return[__T.ADV.go,Math.round(sc.nab.x)]});
+await p.keyboard.down('ArrowRight');await p.waitForTimeout(1200);await p.keyboard.up('ArrowRight');await p.waitForTimeout(200);
+const a1=await p.evaluate(()=>Math.round(__T.ADV.game.scene.getScene('adv').nab.x));await p.keyboard.press('ArrowUp');await p.waitForTimeout(150);
+const a2=await p.evaluate(()=>__T.ADV.game.scene.getScene('adv').jumping);await p.waitForTimeout(600);
+await p.keyboard.down('ArrowLeft');await p.waitForTimeout(500);await p.keyboard.up('ArrowLeft');const a3=await p.evaluate(()=>Math.round(__T.ADV.game.scene.getScene('adv').nab.x));
+console.log('adv kb',JSON.stringify([a0,a1,a2,a3]));await p.screenshot({path:'w10/kb_adv.png'});
+console.log('ERR',errs);await b.close()})();

@@ -398,6 +398,20 @@ footer .brand img{height:44px}
 .more{grid-column:1/-1;display:flex;justify-content:center;padding-top:8px}
 .hh{text-wrap:balance}
 h1.hh{font-size:clamp(38px,4.8vw,66px)}h1.hh em::after{display:none}
+.gfg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+@media (max-width:1000px){.gfg{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:520px){.gfg{grid-template-columns:minmax(0,1fr)}}
+.gf{position:relative;background:var(--card);border-radius:26px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.gf .col{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--c-soft);padding:8px;position:relative}
+.gf .col img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
+.gf .bow{position:absolute;inset:auto 50% 50% auto;translate:50% 50%;width:58px;height:58px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 0 0 5px var(--card),0 8px 18px -6px rgba(0,0,0,.4)}
+.gf .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}.gf .bd .btn{margin-top:auto}
+.gf .ag{font-size:13px;font-weight:700;color:var(--c)}
+.gf b{font-size:19px;line-height:1.3}
+.gf ul{margin:0;padding:0;list-style:none;display:grid;gap:3px;font-size:14px;color:var(--muted)}
+.gf li{display:flex;gap:6px;align-items:baseline}.gf li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--c);translate:0 -2px}
+.gf .btn{width:100%;margin-top:4px;padding:11px 14px;font-size:15.5px;background:var(--c);color:#fff;box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.gf .btn.on{background:var(--teal)}
+.lk{border:0;background:none;padding:0;color:inherit;font:inherit;text-align:start;cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 30%,transparent);text-underline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 
@@ -432,6 +446,12 @@ h1.hh{font-size:clamp(38px,4.8vw,66px)}h1.hh em::after{display:none}
 <section class="newin" style="padding-top:30px"><div class="in">
  <div class="nwh"><div><span class="eyebrow">طالع جديد في الجنينة</span><h2>وصل جديد</h2></div><div class="nwa"><button type="button" class="sl-b" data-nw="1" aria-label="اللي قبلها">›</button><button type="button" class="sl-b" data-nw="-1" aria-label="اللي بعدها">‹</button></div></div>
  <div class="row" id="newRow"></div>
+</div></section>
+
+<section id="gifts" style="padding-top:20px"><div class="in">
+ <span class="eyebrow">هدايا جاهزة</span><h2>رايحين عيد ميلاد أو سبوع؟</h2>
+ <p class="sub">مجموعات مختارة لكل سن، تتضاف للسلة بلمسة واحدة، وتقدروا تشيلوا أو تزوّدوا أي لعبة بعدها.</p>
+ <div class="gfg" id="gfg"></div>
 </div></section>
 
 <section id="beds" style="padding-top:20px"><div class="in">
@@ -656,7 +676,7 @@ function submitOrder(e){e.preventDefault();const f={name:$('#oName').value.trim(
   try{navigator.clipboard.writeText(msg).then(()=>{$('#oCopy').textContent='اتنسخت ✓'},sel)}catch(_){sel()}};
  copy();$('#oCopy').addEventListener('click',copy);box.scrollIntoView({block:'nearest',behavior:'smooth'})}
 function badge(){const n=Object.values(cart).reduce((a,b)=>a+b,0);const el=$('#cartN');el.textContent=AR(n);el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),250)}
-function addCart(id){cart[id]=(cart[id]||0)+1;saveCart();badge();grid();quiz();if($('#prod').classList.contains('on')&&$('#prod').dataset.id===id){const b=$('#prodFoot [data-add]');if(b)b.textContent='✓ في السلة'}toast('اتضافت للسلة ✓')}
+function addCart(id){cart[id]=(cart[id]||0)+1;saveCart();badge();grid();quiz();typeof gifts==='function'&&gifts();if($('#prod').classList.contains('on')&&$('#prod').dataset.id===id){const b=$('#prodFoot [data-add]');if(b)b.textContent='✓ في السلة'}toast('اتضافت للسلة ✓')}
 function toggleFav(id){favs[id]?delete favs[id]:favs[id]=1;saveFav();document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>{b.textContent=favs[id]?'❤️':'🤍';b.classList.toggle('on',!!favs[id]);b.setAttribute('aria-pressed',!!favs[id])});toast(favs[id]?'اتضافت للمفضلة ❤️':'اتشالت من المفضلة');if(sortBy==='fav')grid()}
 
 const ov=$('#gameOv');let fr=null;
@@ -682,7 +702,7 @@ document.addEventListener('click',e=>{const T=e.target;
  if(T.closest('[data-close]')||T.id==='scrim'){closeAll();return}
  const qa=T.closest('[data-qa]');if(qa){qAge=+qa.dataset.qa;quiz();return}
  const qs=T.closest('[data-qs]');if(qs){qGoal=qs.dataset.qs;quiz();return}
- const inc=T.closest('[data-inc]');if(inc){const id=inc.dataset.inc;cart[id]=Math.max(0,(cart[id]||0)+(+inc.dataset.d));if(!cart[id])delete cart[id];saveCart();badge();renderCart();grid();quiz();return}
+ const inc=T.closest('[data-inc]');if(inc){const id=inc.dataset.inc;cart[id]=Math.max(0,(cart[id]||0)+(+inc.dataset.d));if(!cart[id])delete cart[id];saveCart();badge();renderCart();grid();quiz();gifts();return}
 });
 addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();if(ov.classList.contains('on'))$('#gameOv .gx').click()}});
 $('#q').addEventListener('input',e=>{query=e.target.value;grid()});
@@ -726,7 +746,20 @@ addEventListener('message',e=>{const d=e.data;if(!d||typeof d!=='object'||!d.nab
  const U=real?location.origin+location.pathname:STORE_LINK,T='جنينة نبتة 🌱 ألعاب تعليمية حقيقية للأطفال، ولعبة ببلاش على الموبايل: ';
  $('#shU').textContent=U;$('#shWa').href='https://wa.me/?text='+encodeURIComponent(T+U);$('#shFb').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(U);
  $('#shCp').onclick=()=>{const sel=()=>{const r=document.createRange();r.selectNodeContents($('#shU'));const g=getSelection();g.removeAllRanges();g.addRange(r);toast('اتحدد اللينك، انسخوه')};try{navigator.clipboard.writeText(U).then(()=>toast('اتنسخ اللينك 🔗'),sel)}catch(_){sel()}}}
-rail();newRow();beds();chips();grid();badge();quiz();
+
+/* ready-made gift sets per age: one tap adds the whole set to the cart */
+const GIFTS=[
+ ['🍼','هدية السبوع وأول سنة','من الولادة','#d6457a','#ffe3ee',['pianomat','rattles','balls','babyphone']],
+ ['🧸','هدية سنة ونص لسنتين','من سنة ونص','#d9661a','#ffe9d6',['spinner','octopus','fruitapple','animalpuzzle']],
+ ['🎨','هدية ٣ سنين','٣ سنين','#0a9496','#dcf3f1',['kitchen','eggs','dino','magboard']],
+ ['🚀','هدية ٤ لـ ٦ سنين','٤ لـ ٦ سنين','#1f8fd6','#e0f1ff',['gearblocks','takeapart','boxing','markers']]];
+function gifts(){$('#gfg').innerHTML=GIFTS.map(([ic,n,ag,c,cs,ids],k)=>{const L=ids.map(i=>byId[i]).filter(t=>t&&!t.out);if(!L.length)return'';const all=L.every(t=>cart[t.id]);
+ return `<article class="gf" style="--c:${c};--c-soft:${cs}"><div class="col">${L.slice(0,4).map(t=>`<img src="${img(t)}" alt="" loading="lazy">`).join('')}<span class="bow" aria-hidden="true">${ic}</span></div>
+ <div class="bd"><span class="ag">${ag} · ${AR(L.length)} ألعاب</span><b>${n}</b><ul>${L.map(t=>`<li><button type="button" class="lk" data-open="${t.id}">${t.n}</button></li>`).join('')}</ul>
+ <button type="button" class="btn ${all?'on':''}" data-gift="${k}">${all?'✓ الهدية في السلة':'🎁 ضيف الهدية كلها للسلة'}</button></div></article>`}).join('')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gift]');if(!b)return;const ids=GIFTS[+b.dataset.gift][5].filter(i=>byId[i]&&!byId[i].out);
+ ids.forEach(i=>{if(!cart[i])cart[i]=1});saveCart();badge();grid();quiz();gifts();toast('الهدية اتضافت للسلة 🎁 ('+AR(ids.length)+' ألعاب)')});
+rail();newRow();beds();chips();grid();badge();quiz();gifts();
 if(location.hash==='#play')setTimeout(()=>openGame(),300);
 {const m=location.hash.match(/^#p-([\w-]+)$/);if(m&&byId[m[1]])setTimeout(()=>openProd(m[1]),200)}
 </script>

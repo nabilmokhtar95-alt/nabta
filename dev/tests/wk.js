@@ -1,0 +1,11 @@
+const {chromium,devices}=require('playwright');
+(async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13']});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.addInitScript(()=>{Date.prototype.getHours=function(){return 14};if(!sessionStorage.x){sessionStorage.x=1;localStorage.setItem('nabta-garden',JSON.stringify({v:1,named:1,brand:1,gtut:1,coins:60,level:3,age:5,zoo:[],tut:{whack:1}}))}});
+await p.goto('file://'+process.cwd()+'/test28.html');await p.waitForTimeout(900);await p.evaluate(()=>document.querySelector('#tPlay').click());await p.waitForTimeout(1200);await p.evaluate(()=>{document.querySelectorAll('#scrim.open [data-close]').forEach(e=>e.click())});
+await p.evaluate(()=>document.querySelector('[data-tab="play"]').click());await p.waitForTimeout(600);await p.evaluate(()=>__T.openGame('whack'));await p.waitForTimeout(1200);await p.screenshot({path:'w10/wk0.png'});
+await p.evaluate(()=>{const b=[...document.querySelectorAll('#stage button')].find(x=>/ابدأ/.test(x.textContent));b.click()});await p.waitForTimeout(4200);
+await p.evaluate(()=>{const A=__T.AR;A.holes.forEach(h=>h.o=null);A.holes[4].o={k:'lady',t:.4,life:5,hit:0};A.holes[0].o={k:'worm',t:.4,life:5,hit:0};A.spawn=9});await p.waitForTimeout(300);await p.screenshot({path:'w10/wk1.png'});
+const pos=await p.evaluate(()=>{const A=__T.AR,cv=A.cv,r=cv.getBoundingClientRect(),h=A.holes[4];return{x:r.left+h.x*r.width/cv.width*(cv.width/ (cv.clientWidth? cv.width: cv.width)),y:0,cw:cv.width,rw:r.width,l:r.left,t:r.top,hx:h.x,hy:h.y,rh:r.height,ch:cv.height}});
+console.log(JSON.stringify(pos));
+await p.evaluate(()=>{const A=__T.AR;const h=A.holes[4];h.o.hit=.001;A.lives--});await p.waitForTimeout(250);await p.screenshot({path:'w10/wk2.png'});
+console.log('ERR',errs);await b.close()})();
