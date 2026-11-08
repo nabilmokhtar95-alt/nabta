@@ -219,6 +219,7 @@ footer .brand img{height:44px}
 .order label{display:grid;gap:4px;font-weight:600;font-size:15px}
 .order input,.order select,.order textarea{border:0;border-radius:12px;padding:10px 12px;background:var(--paper);box-shadow:0 0 0 2px var(--line) inset;width:100%}
 .err{color:var(--berry);font-weight:600;font-size:14px}
+.order [aria-invalid="true"]{box-shadow:0 0 0 2px var(--berry) inset}
 .msg{white-space:pre-wrap;background:var(--paper);border-radius:12px;padding:12px;font-size:14px;user-select:text;-webkit-user-select:text}
 .okmsg{background:var(--lime-soft);border-radius:12px;padding:10px 12px;font-weight:600}
 #toast{position:fixed;top:calc(74px + env(safe-area-inset-top,0px));left:50%;transform:translate(-50%,-30px);background:var(--ink);color:var(--paper);border-radius:99px;padding:10px 18px;font-weight:600;opacity:0;transition:.25s;z-index:90;pointer-events:none}
@@ -570,9 +571,15 @@ h1.hh{font-size:clamp(38px,4.8vw,66px)}h1.hh em::after{display:none}
 <script src="products.js"></script>
 <script>
 const PAGE='https://m.me/Nabta2022';
+// رقم واتساب الطلبات (اختياري): اكتبوه بالشكل الدولي من غير + ولا مسافات، مثلاً 2010xxxxxxxx. لو فاضي، الطلب بيروح على الماسنجر بس
+const WA='';
+const toEn=v=>String(v).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+const okPhone=v=>/^(\+?20|0020)?0?1[0125]\d{8}$/.test(toEn(v).replace(/[\s\-()]/g,''));
 const $=s=>document.querySelector(s),AR=n=>Number(n).toLocaleString('ar-EG');
 const byId=Object.fromEntries(TOYS.map(t=>[t.id,t]));
 const img=t=>(t.imgs&&t.imgs[0])||'toys/'+t.id+'.webp';
+const th=t=>img(t).replace(/^toys\/([^/]+)$/,'toys/s/$1'); // small card image; falls back to the full photo if missing
+addEventListener('error',e=>{const i=e.target;if(i&&i.tagName==='IMG'&&/\/toys\/s\//.test(i.src)){i.src=i.src.replace('/toys/s/','/toys/')}},true);
 const priceTxt=t=>t.price?AR(t.price)+' ج.م':'السعر على الماسنجر';
 const CC={baby:['#d6457a','#ffe3ee'],pretend:['#d9661a','#ffe9d6'],move:['#1f8fd6','#e0f1ff'],build:['#0a9496','#dcf3f1'],match:['#c2177a','#ffe3f0'],write:['#a87400','#fff3cc'],sense:['#7a4fd0','#efe7ff']};
 const cc=k=>CC[k]||['#7a9a10','#eef7cf'];
@@ -606,7 +613,7 @@ const fits=(t,a)=>a==null||(t.age<=a&&!(a>=3&&t.cat==='baby'));
  tr.innerHTML=SL.map((x,k)=>`<article class="hsl ${k?'':'on'}" style="--a:${x.c[0]};--b:${x.c[1]};--d:${x.c[2]}" aria-hidden="${!!k}">
   <div class="aur"></div>${shapes}
   <div class="txt"><span class="kk">${x.k}</span>${k?`<h2 class="hh">${x.h}</h2>`:`<h1 class="hh">${x.h}</h1>`}<p>${x.p}</p><a class="hcta" href="#" data-cta="${x.cta[1]}">${x.cta[0]}</a></div>
-  <div class="vis">${x.game?`<div class="phn3"><img src="img/shot_garden.webp" alt=""><span>▶</span></div>`:x.ids.map((id,n)=>{const t=byId[id];return t?`<button type="button" class="fc f${n}" data-open="${id}" aria-label="${esc(t.n)}"><img src="${img(t)}" alt="" ${k?'loading="lazy"':''}><b>${t.n}</b></button>`:''}).join('')}</div>
+  <div class="vis">${x.game?`<div class="phn3"><img src="img/shot_garden.webp" alt=""><span>▶</span></div>`:x.ids.map((id,n)=>{const t=byId[id];return t?`<button type="button" class="fc f${n}" data-open="${id}" aria-label="${esc(t.n)}"><img src="${th(t)}" alt="" ${k?'loading="lazy"':''}><b>${t.n}</b></button>`:''}).join('')}</div>
  </article>`).join('');
  bars.innerHTML=SL.map((x,k)=>`<button type="button" class="bar1" data-hs="${k}" aria-label="${x.k}"><i></i></button>`).join('');
  const sl=tr.children;
@@ -628,12 +635,12 @@ const fits=(t,a)=>a==null||(t.age<=a&&!(a>=3&&t.cat==='baby'));
 })();
 
 function rail(){$('#rail').innerHTML=STAGES.map(([a,n,s,im,h])=>`<button class="st" type="button" data-age="${a}" aria-pressed="${age===a}" style="--h:${h}px"><span class="pi"><img src="img/${im}.webp" alt=""></span><b>${n}</b><small>${s}</small></button>`).join('')}
-function newRow(){const N=TOYS.filter(t=>t.badge==='جديد'&&!t.out);$('#newRow').innerHTML=N.map(t=>`<button type="button" class="mini" data-open="${t.id}" style="${vars(t.cat)}"><img src="${img(t)}" alt="${esc(t.n)}" loading="lazy"><span>${t.n}</span></button>`).join('');if(!N.length)$('.newin').hidden=true}
+function newRow(){const N=TOYS.filter(t=>t.badge==='جديد'&&!t.out);$('#newRow').innerHTML=N.map(t=>`<button type="button" class="mini" data-open="${t.id}" style="${vars(t.cat)}"><img src="${th(t)}" alt="${esc(t.n)}" loading="lazy"><span>${t.n}</span></button>`).join('');if(!N.length)$('.newin').hidden=true}
 function beds(){$('#bedsGrid').innerHTML=CATS.filter(c=>c[0]!=='all').map(([k,v])=>{const L=TOYS.filter(t=>t.cat===k);if(!L.length)return'';
- const sk=[...new Set(L.flatMap(t=>t.sk))].slice(0,3).join(' · ');return `<button class="bedc" type="button" data-bed="${k}" style="${vars(k)}"><b>${v}</b><small>${AR(L.length)} ${L.length>2&&L.length<11?'ألعاب':'لعبة'}</small><span class="sk">${sk}</span><span class="fan">${L.slice(0,3).map(t=>`<img src="${img(t)}" alt="" loading="lazy">`).join('')}</span></button>`}).join('')}
+ const sk=[...new Set(L.flatMap(t=>t.sk))].slice(0,3).join(' · ');return `<button class="bedc" type="button" data-bed="${k}" style="${vars(k)}"><b>${v}</b><small>${AR(L.length)} ${L.length>2&&L.length<11?'ألعاب':'لعبة'}</small><span class="sk">${sk}</span><span class="fan">${L.slice(0,3).map(t=>`<img src="${th(t)}" alt="" loading="lazy">`).join('')}</span></button>`}).join('')}
 function chips(){$('#fCat').innerHTML=CATS.map(([k,v])=>`<button class="chip" type="button" data-cat="${k}" aria-pressed="${k===cat}">${v}</button>`).join('')}
 function card(t){const g=(TOYGAME[t.id]||[]).length;return `<article class="pk" style="${vars(t.cat)}"><div class="top"><span>${catName(t.cat)}</span><span class="age">${ageTxt(t)}</span></div>
- <button class="ph" type="button" data-open="${t.id}" aria-label="تفاصيل ${esc(t.n)}"><img src="${img(t)}" alt="${esc(t.n)}" loading="lazy" data-pimg="${t.id}"></button>
+ <button class="ph" type="button" data-open="${t.id}" aria-label="تفاصيل ${esc(t.n)}"><img src="${th(t)}" alt="${esc(t.n)}" loading="lazy" data-pimg="${t.id}"></button>
  ${g?'<span class="gm">🎮 ليها لعبة</span>':''}${t.badge?`<span class="new">${t.badge}</span>`:''}<button class="hf" type="button" data-fav="${t.id}" aria-label="مفضلة" aria-pressed="${!!favs[t.id]}">${favs[t.id]?'❤️':'🤍'}</button>
  <div class="bd"><h3><button type="button" data-open="${t.id}">${t.n}</button></h3>${t.hook?`<p class="hook">${t.hook}</p>`:''}<div class="leaves">${t.sk.slice(0,2).map(s=>`<i>${s}</i>`).join('')}</div>
  <div class="foot"><span class="pr">${t.out?'خلصت مؤقتاً':priceTxt(t)}</span>${t.out?'':`<button class="add ${cart[t.id]?'on':''}" type="button" data-add="${t.id}" aria-label="أضف ${esc(t.n)} للسلة">${cart[t.id]?'✓':'＋'}</button>`}</div></div></article>`}
@@ -650,7 +657,7 @@ function quiz(){
  $('#qSkill').innerHTML=GOALS.map(([k,v])=>`<button class="chip" type="button" data-qs="${k}" aria-pressed="${k===qGoal}">${v}</button>`).join('');
  const g=GOALS.find(x=>x[0]===qGoal),pick=g[2].map(i=>byId[i]).filter(t=>t&&fits(t,qAge));const t=pick[0]||TOYS.find(x=>fits(x,qAge)&&g[2].includes(x.id))||byId[g[2][0]];
  const why=pick[0]?'':'<small style="display:block;color:var(--muted)">مفيش في المهارة دي لعبة لسن أصغر، فدي أقرب حاجة.</small>';
- $('#rec').innerHTML=`<div class="rec" style="${vars(t.cat)}"><img src="${img(t)}" alt="${esc(t.n)}"><div><small style="color:var(--berry);font-weight:700">نبتة بترشّح</small><b>${t.n}</b>${why}<p>${t.d||''}</p><div class="ctas"><button class="btn p" style="padding:9px 16px;font-size:15px" type="button" data-add="${t.id}">${cart[t.id]?'✓ في السلة':'＋ للسلة'}</button><button class="btn s" style="padding:9px 16px;font-size:15px" type="button" data-open="${t.id}">التفاصيل</button></div></div></div>`}
+ $('#rec').innerHTML=`<div class="rec" style="${vars(t.cat)}"><img src="${th(t)}" alt="${esc(t.n)}"><div><small style="color:var(--berry);font-weight:700">نبتة بترشّح</small><b>${t.n}</b>${why}<p>${t.d||''}</p><div class="ctas"><button class="btn p" style="padding:9px 16px;font-size:15px" type="button" data-add="${t.id}">${cart[t.id]?'✓ في السلة':'＋ للسلة'}</button><button class="btn s" style="padding:9px 16px;font-size:15px" type="button" data-open="${t.id}">التفاصيل</button></div></div></div>`}
 
 function show(id){$('#scrim').classList.add('on');const d=$('#'+id);d.classList.add('on');d.setAttribute('aria-hidden','false');setTimeout(()=>d.querySelector('[data-close]').focus(),60)}
 function closeDrawers(){$('#scrim').classList.remove('on');document.querySelectorAll('.drawer').forEach(d=>{d.classList.remove('on');d.setAttribute('aria-hidden','true')})}
@@ -665,7 +672,7 @@ function openProd(id,from){const t=byId[id];if(!t)return;const pp=$('#prod');con
   <div><h4>عن اللعبة</h4><p class="desc">${t.d||''}</p></div>
   ${t.tip?`<div class="tip"><span aria-hidden="true">💡</span><span><b>إزاي تلعبوها سوا:</b> ${t.tip}</span></div>`:''}
   ${G.length?`<div class="tgame"><b>🎮 يتمرّن عليها في جنينة نبتة ببلاش</b><div>${G.map(([g,ic,n])=>`<button type="button" class="tgb" data-pg="${g}">${ic} ${n}</button>`).join('')}</div></div>`:''}
-  ${rel.length?`<div class="rel"><h4>ألعاب في نفس الحوض</h4><div class="row">${rel.map(x=>`<button type="button" class="mini" data-open="${x.id}" style="${vars(x.cat)}"><img src="${img(x)}" alt="" loading="lazy"><span>${x.n}</span></button>`).join('')}</div></div>`:''}</div></div>`;
+  ${rel.length?`<div class="rel"><h4>ألعاب في نفس الحوض</h4><div class="row">${rel.map(x=>`<button type="button" class="mini" data-open="${x.id}" style="${vars(x.cat)}"><img src="${th(x)}" alt="" loading="lazy"><span>${x.n}</span></button>`).join('')}</div></div>`:''}</div></div>`;
  $('#prodFoot').innerHTML=`<span class="pr">${priceTxt(t)}</span><span class="acts"><button class="fav ${favs[t.id]?'on':''}" type="button" data-fav="${t.id}" aria-label="مفضلة">${favs[t.id]?'❤️':'🤍'}</button>${t.out?'<span>خلصت مؤقتاً</span>':`<button class="btn p" type="button" data-add="${t.id}">${cart[t.id]?'✓ في السلة':'＋ أضف للسلة'}</button>`}</span>`;
  pp.dataset.id=t.id;closeDrawers();pp.classList.add('on');pp.setAttribute('aria-hidden','false');document.documentElement.style.overflow='hidden';$('#prodBody').scrollTop=0;
  const z=$('#zoom');z.addEventListener('pointermove',e=>{const r=z.getBoundingClientRect();z.style.setProperty('--zx',((e.clientX-r.left)/r.width*100)+'%');z.style.setProperty('--zy',((e.clientY-r.top)/r.height*100)+'%')});
@@ -681,7 +688,7 @@ const cartLines=()=>Object.entries(cart).filter(([id,q])=>byId[id]&&q>0).map(([i
 function renderCart(){const L=cartLines();
  if(!L.length){$('#cartBody').innerHTML=`<div class="empty" style="display:grid;gap:12px;justify-items:center"><img src="img/g_seed.webp" alt="" style="width:90px"><b>السلة فاضية</b><a class="btn s" href="#shop" data-close>تسوّقوا الألعاب</a></div>`;return}
  const known=L.every(x=>x.t.price),sum=L.reduce((a,x)=>a+(x.t.price||0)*x.q,0);
- $('#cartBody').innerHTML=L.map(({t,q})=>`<div class="ci"><img src="${img(t)}" alt=""><div><b>${t.n}</b><small>${priceTxt(t)}</small></div><div class="qty"><button type="button" data-inc="${t.id}" data-d="-1" aria-label="أقل">−</button><span>${AR(q)}</span><button type="button" data-inc="${t.id}" data-d="1" aria-label="أكتر">+</button></div></div>`).join('')+
+ $('#cartBody').innerHTML=L.map(({t,q})=>`<div class="ci"><img src="${th(t)}" alt=""><div><b>${t.n}</b><small>${priceTxt(t)}</small></div><div class="qty"><button type="button" data-inc="${t.id}" data-d="-1" aria-label="أقل">−</button><span>${AR(q)}</span><button type="button" data-inc="${t.id}" data-d="1" aria-label="أكتر">+</button></div></div>`).join('')+
  `<div class="tot"><span>الإجمالي</span><span>${known?AR(sum)+' ج.م':'نأكده على الماسنجر'}</span></div>
  <form class="order" id="orderF" novalidate><h4>بيانات التوصيل</h4>
   <label for="oName">الاسم<input id="oName" autocomplete="name" required value="${esc(draft.name)}"></label>
@@ -689,16 +696,17 @@ function renderCart(){const L=cartLines();
   <label for="oGov">المحافظة<select id="oGov" required><option value="">اختاروا المحافظة</option>${GOV.map(g=>`<option ${draft.gov===g?'selected':''}>${g}</option>`).join('')}</select></label>
   <label for="oAddr">العنوان<textarea id="oAddr" rows="2" autocomplete="street-address" required>${esc(draft.addr)}</textarea></label>
   <label for="oNote">ملاحظات (اختياري)<input id="oNote" value="${esc(draft.note)}" placeholder="مثلاً: هدية لعيد ميلاد"></label>
-  <span class="err" id="oErr" hidden>كمّلوا الاسم ورقم الموبايل والمحافظة والعنوان.</span>
+  <span class="err" id="oErr" role="alert" hidden></span>
   <button class="btn p" type="submit">💬 جهّز رسالة الطلب</button>
  </form><div id="oDone"></div>`;
  $('#orderF').addEventListener('input',()=>{draft={name:$('#oName').value,phone:$('#oPhone').value,gov:$('#oGov').value,addr:$('#oAddr').value,note:$('#oNote').value};try{localStorage.setItem('nabta-draft',JSON.stringify(draft))}catch(e){}});
  $('#orderF').addEventListener('submit',submitOrder)}
 function submitOrder(e){e.preventDefault();const f={name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),gov:$('#oGov').value,addr:$('#oAddr').value.trim(),note:$('#oNote').value.trim()};
- if(!f.name||!f.phone||!f.gov||!f.addr){$('#oErr').hidden=false;return}$('#oErr').hidden=true;
+ const miss=[['oName',!f.name],['oPhone',!f.phone||!okPhone(f.phone)],['oGov',!f.gov],['oAddr',!f.addr]];miss.forEach(([id,b])=>$('#'+id).setAttribute('aria-invalid',b));
+ const bad=miss.find(x=>x[1]);if(bad){$('#oErr').textContent=f.phone&&!okPhone(f.phone)&&bad[0]==='oPhone'?'رقم الموبايل لازم يكون ١١ رقم ويبدأ بـ 01، مثلاً 01012345678':'كمّلوا الاسم ورقم الموبايل والمحافظة والعنوان.';$('#oErr').hidden=false;$('#'+bad[0]).focus();return}$('#oErr').hidden=true;f.phone=toEn(f.phone).replace(/[\s\-()]/g,'');
  const L=cartLines(),known=L.every(x=>x.t.price),sum=L.reduce((a,x)=>a+(x.t.price||0)*x.q,0);
  const msg=`طلب جديد من موقع نبتة 🌱\n\n${L.map(({t,q})=>`• ${t.n} × ${q}${t.price?' ('+t.price*q+' ج.م)':''}`).join('\n')}\n${known?'\nالإجمالي: '+sum+' ج.م\n':''}\nالاسم: ${f.name}\nالموبايل: ${f.phone}\nالمحافظة: ${f.gov}\nالعنوان: ${f.addr}${f.note?'\nملاحظات: '+f.note:''}`;
- const box=$('#oDone');box.innerHTML=`<div class="okmsg">الرسالة جاهزة. انسخوها وابعتوها لنا على الماسنجر، وهنرد عليكم ونأكد التفاصيل.</div><div class="msg" id="oMsg"></div><div class="ctas" style="margin-top:10px"><button class="btn s" type="button" id="oCopy">انسخ الرسالة</button><a class="btn p" href="${PAGE}" target="_blank" rel="noopener">💬 افتح ماسنجر نبتة</a></div>`;
+ const box=$('#oDone');box.innerHTML=`<div class="okmsg">الرسالة جاهزة. انسخوها وابعتوها لنا على الماسنجر، وهنرد عليكم ونأكد التفاصيل.</div><div class="msg" id="oMsg"></div><div class="ctas" style="margin-top:10px"><button class="btn s" type="button" id="oCopy">انسخ الرسالة</button>${WA?`<a class="btn p" href="https://wa.me/${WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">🟢 ابعتوها واتساب</a>`:''}<a class="btn ${WA?'s':'p'}" href="${PAGE}" target="_blank" rel="noopener">💬 افتح ماسنجر نبتة</a></div>`;
  $('#oMsg').textContent=msg;
  const copy=()=>{const sel=()=>{const r=document.createRange();r.selectNodeContents($('#oMsg'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#oCopy').textContent='اتحددت، انسخوها'};
   try{navigator.clipboard.writeText(msg).then(()=>{$('#oCopy').textContent='اتنسخت ✓'},sel)}catch(_){sel()}};
@@ -749,7 +757,7 @@ const SKILLS=[
  ['🔬','علوم وطبيعة','معلومات بسيطة عن النباتات والطبيعة',['STEM'],'weather','#2c8a4b']];
 const skToys=k=>TOYS.filter(t=>t.sk.some(x=>k[3].includes(x)));
 $('#skg').innerHTML=SKILLS.map((k,i)=>{const L=skToys(k);return `<button type="button" class="skc" data-skill="${i}" style="--k:${k[5]}"><span class="ic">${k[0]}</span><b>${k[1]}</b><p>${k[2]}</p>
- <span class="tt">${L.slice(0,4).map(t=>`<img src="${img(t)}" alt="" loading="lazy">`).join('')}</span>
+ <span class="tt">${L.slice(0,4).map(t=>`<img src="${th(t)}" alt="" loading="lazy">`).join('')}</span>
  <span class="acts"><span>${AR(L.length)} ${L.length>2&&L.length<11?'ألعاب':'لعبة'}</span>${k[4]?`<span class="pg" data-pg="${k[4]}">🎮 جرّبوها في الجنينة</span>`:`<span class="pg" data-play>🌱 نزرع في الجنينة</span>`}</span></button>`}).join('');
 document.addEventListener('click',e=>{if(e.target.closest('[data-pg],[data-play]'))return;const b=e.target.closest('[data-skill]');if(!b)return;const k=SKILLS[+b.dataset.skill];
  cat='all';age=null;rail();chips();query='';$('#q').value='';const ids=new Set(skToys(k).map(t=>t.id));
@@ -782,7 +790,7 @@ const GIFTS=[
  ['🎨','هدية ٣ سنين','٣ سنين','#0a9496','#dcf3f1',['kitchen','eggs','dino','magboard']],
  ['🚀','هدية ٤ لـ ٦ سنين','٤ لـ ٦ سنين','#1f8fd6','#e0f1ff',['gearblocks','takeapart','boxing','markers']]];
 function gifts(){$('#gfg').innerHTML=GIFTS.map(([ic,n,ag,c,cs,ids],k)=>{const L=ids.map(i=>byId[i]).filter(t=>t&&!t.out);if(!L.length)return'';const all=L.every(t=>cart[t.id]);
- return `<article class="gf" style="--c:${c};--c-soft:${cs}"><div class="col">${L.slice(0,4).map(t=>`<img src="${img(t)}" alt="" loading="lazy">`).join('')}<span class="bow" aria-hidden="true">${ic}</span></div>
+ return `<article class="gf" style="--c:${c};--c-soft:${cs}"><div class="col">${L.slice(0,4).map(t=>`<img src="${th(t)}" alt="" loading="lazy">`).join('')}<span class="bow" aria-hidden="true">${ic}</span></div>
  <div class="bd"><span class="ag">${ag} · ${AR(L.length)} ألعاب</span><b>${n}</b><ul>${L.map(t=>`<li><button type="button" class="lk" data-open="${t.id}">${t.n}</button></li>`).join('')}</ul>
  <button type="button" class="btn ${all?'on':''}" data-gift="${k}">${all?'✓ الهدية في السلة':'🎁 ضيف الهدية كلها للسلة'}</button></div></article>`}).join('')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-gift]');if(!b)return;const ids=GIFTS[+b.dataset.gift][5].filter(i=>byId[i]&&!byId[i].out);

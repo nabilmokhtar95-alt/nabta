@@ -1668,6 +1668,16 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
 #storyV .sq .ops button.no{animation:stShake .4s}
 #storyV .sq .again{background:transparent;color:#fff;border:2px solid #fff8;border-radius:99px;padding:6px 18px;font-weight:700}
 @keyframes stShake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* parent gate: للكبار بس */
+#pgate{position:fixed;inset:0;z-index:90;background:rgba(20,40,30,.6);display:none;align-items:center;justify-content:center;padding:16px}
+#pgate.on{display:flex}
+#pgate .pg{background:#fff;border-radius:26px;padding:20px 18px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.15);color:#234}
+#pgate h3{margin:0 0 4px;font-size:22px}#pgate p{margin:0 0 14px;font-size:16px;line-height:1.6}
+#pgate .ops{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+#pgate .ops button{font-size:26px;font-weight:800;padding:12px 0;border-radius:16px;background:#eef7f0;color:#234;box-shadow:0 4px 0 #cfe3d3}
+#pgate .ops button.no{animation:stShake .4s;background:#ffe3e3}
+#pgate .cx{margin-top:14px;background:transparent;color:#678;font-weight:700}
 </style>
 <script>document.documentElement.classList.add('boot')</script>
 
@@ -1832,6 +1842,7 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
 <div class="scrim" id="scrim" dir="rtl" lang="ar"><div class="sheet" id="sheet"></div></div>
 <div class="banner" id="banner" dir="rtl" lang="ar"><h3 id="bannerT"></h3><p id="bannerP"></p></div>
 <div id="storyV" dir="rtl" lang="ar" role="dialog" aria-label="حكاية نبتة"><button class="sx" data-sx aria-label="قفل الحكاية">✕</button><video id="stVid" playsinline preload="none"></video><div class="sq" id="stQ"></div></div>
+<div id="pgate" dir="rtl" lang="ar" role="dialog" aria-modal="true" aria-label="للكبار بس"><div class="pg" id="pgBox"></div></div>
 <canvas id="fx"></canvas>
 
 <script>
@@ -5747,6 +5758,22 @@ function closeTitle(tab){audio();SND.pop();$('#title').hidden=true;document.body
   if(!S.named)setTimeout(()=>askName(gift),350);else{gift();if(S.name)speak('أهلاً يا '+S.name)}}
 $('#tPlay').onclick=()=>closeTitle('garden');
 $('#tGarden').onclick=()=>closeTitle('map');
+
+/* =================== PARENT GATE =================== */
+// links that leave the game (Facebook, WhatsApp, the store) ask a grown-up a written question first
+const PGW=[[12,'اتناشر'],[15,'خمستاشر'],[18,'تمنتاشر'],[25,'خمسة وعشرين'],[34,'أربعة وتلاتين'],[47,'سبعة وأربعين'],[52,'اتنين وخمسين'],[63,'تلاتة وستين'],[71,'واحد وسبعين'],[86,'ستة وتمانين']];
+let pgOK=0,pgEl=null;
+function parentGate(el){pgEl=el;const [n,w]=rnd(PGW),d=String(n).split('').reverse().join('');
+  const ops=[...new Set([n,+d,n+10>99?n-10:n+10,n%10*10+1===n?n+3:n+2])].slice(0,4).sort(()=>Math.random()-.5);
+  $('#pgBox').innerHTML=`<h3>🔒 للكبار بس</h3><p>اللينك ده هيخرّجكم من اللعبة. عشان نكمّل، اختاروا الرقم: <b>${w}</b></p><div class="ops">${ops.map(o=>`<button type="button" data-pg="${o===n?1:0}">${ar(o)}</button>`).join('')}</div><button type="button" class="cx" data-pgx>رجوع للعبة</button>`;
+  $('#pgate').classList.add('on')}
+$('#pgate').addEventListener('click',e=>{const t=e.target;
+  if(t.id==='pgate'||t.closest('[data-pgx]')){$('#pgate').classList.remove('on');pgEl=null;return}
+  const b=t.closest('[data-pg]');if(!b)return;
+  if(b.dataset.pg==='1'){pgOK=Date.now();$('#pgate').classList.remove('on');const el=pgEl;pgEl=null;el&&el.click()}
+  else{b.classList.remove('no');void b.offsetWidth;b.classList.add('no');SND.no()}});
+document.addEventListener('click',e=>{const el=e.target.closest('a[href^="http"],[data-instore],#toStore');if(!el||el.closest('#pgate'))return;
+  if(Date.now()-pgOK<60000)return;e.preventDefault();e.stopImmediatePropagation();parentGate(el)},true);
 /* =================== STORIES: حكايات نبتة =================== */
 const STORIES=[
  {id:'worm',n:'نبتة والدودة الجعانة',v:'videos/nabta-ep1.mp4',img:'videos/ep1.webp',

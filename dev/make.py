@@ -45,6 +45,18 @@ tail='''<style>.pwa-inst{position:fixed;left:50%;top:calc(10px + env(safe-area-i
 </script>
 '''
 assert '</head>' in s and '</body>' in s
+# hosted build: move the inline webp art out to ga/*.webp so the page itself is small and loads fast
+import re,hashlib,base64,glob
+GA=os.path.join(D,'..','ga');os.makedirs(GA,exist_ok=True);keep=set()
+def ext(m):
+    b=base64.b64decode(m.group(1));n=hashlib.sha1(b).hexdigest()[:12]+'.webp';keep.add(n)
+    f=os.path.join(GA,n)
+    if not os.path.exists(f):open(f,'wb').write(b)
+    return 'ga/'+n
+s=re.sub(r'data:image/webp;base64,([A-Za-z0-9+/=]+)',ext,s)
+for f in glob.glob(os.path.join(GA,'*.webp')):
+    if os.path.basename(f) not in keep:os.remove(f)
+open(os.path.join(GA,'index.js'),'w').write('self.GA='+repr(sorted('ga/'+k for k in keep)).replace("'",'"')+';\n')
 s=s.replace('</head>',head+'</head>',1)
 i=s.rfind('</body>');s=s[:i]+tail+s[i:]
 open(os.path.join(D,'..','game.html'),'w',encoding='utf8').write(s);print('built',len(s))
