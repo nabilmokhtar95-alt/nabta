@@ -1648,6 +1648,32 @@ html.boot #tPlay,html.boot #tGarden{pointer-events:none;opacity:.55;filter:satur
 html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:50;background:#fff;color:#0b6f71;font-weight:800;font-size:16px;border-radius:999px;padding:10px 22px 14px;box-shadow:0 6px 18px rgba(0,0,0,.18);
  background-image:linear-gradient(90deg,#7ad35b,#0faeb0,#7ad35b);background-size:200% 5px;background-repeat:no-repeat;background-position:0 100%;animation:bootbar 1.2s linear infinite}
 @keyframes bootbar{to{background-position:-200% 100%}}
+
+/* stories: حكايات نبتة */
+.stc{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:10px 14px;border-radius:20px;background:linear-gradient(135deg,#ffcf5a,#ff9a3c);color:#4a2500;box-shadow:0 5px 0 #d9741a;text-align:start}
+.stc i{font-style:normal;font-size:38px}.stc b{font-family:var(--display);font-weight:400;font-size:24px;display:block;line-height:1.2}.stc small{font-size:14px;font-weight:700;opacity:.85}
+.stc em{margin-inline-start:auto;font-style:normal;background:#fff;color:#d9741a;border-radius:99px;padding:2px 12px;font-weight:800;font-size:14px}
+.tbtns .btn.tst{background:linear-gradient(180deg,#ffd166,#ff9a3c);box-shadow:0 4px 0 #d9741a;font-size:19px;padding:6px 22px}
+.stl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding-bottom:10px}
+.stl button{position:relative;border-radius:22px;overflow:hidden;padding:0;background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.12);text-align:center}
+.stl img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.stl b{display:block;padding:8px 6px 10px;font-weight:800;font-size:16px;color:#3a2a10}
+.stl .pl{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:26px;color:#ff7a1a;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.stl .soon{filter:grayscale(.2)}.stl .soon .ph{aspect-ratio:3/4;display:grid;place-items:center;font-size:64px;background:linear-gradient(180deg,#e6f6ff,#d4f0c8)}
+.stl .soon .pl{font-size:15px;width:auto;height:auto;padding:4px 12px;border-radius:99px;color:#777}
+.stl .done{position:absolute;top:8px;inset-inline-end:8px;background:#ffd23f;border-radius:99px;padding:0 8px;font-size:14px}
+#storyV{position:fixed;inset:0;z-index:80;background:#0d1f17;display:none;flex-direction:column;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 10px) 10px calc(env(safe-area-inset-bottom,0px) + 10px)}
+#storyV.on{display:flex}
+#storyV video{max-width:100%;max-height:100%;border-radius:18px;background:#000}
+#storyV .sx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);inset-inline-start:12px;width:52px;height:52px;border-radius:50%;background:#fff;font-size:24px;font-weight:900;color:#333;z-index:2}
+#storyV .sq{display:none;flex-direction:column;align-items:center;gap:18px;color:#fff;text-align:center}
+#storyV.quiz video{display:none}#storyV.quiz .sq{display:flex}
+#storyV .sq h3{font-family:var(--display);font-weight:400;font-size:clamp(26px,6vw,40px);margin:0}
+#storyV .sq .ops{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+#storyV .sq .ops button{width:min(28vw,130px);aspect-ratio:1;border-radius:28px;background:#fff;font-size:min(16vw,72px);font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;box-shadow:0 6px 0 #cfd8d0}
+#storyV .sq .ops button.no{animation:stShake .4s}
+#storyV .sq .again{background:transparent;color:#fff;border:2px solid #fff8;border-radius:99px;padding:6px 18px;font-weight:700}
+@keyframes stShake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0faeb0">
@@ -1813,6 +1839,7 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
   <div class="tbtns">
     <button class="btn big red" id="tPlay">▶ يلا نلعب</button>
     <button class="btn big" id="tGarden">🗺️ المغامرة</button>
+    <button class="btn tst" id="tStories">🎬 حكايات نبتة</button>
   </div>
   <div class="tkids" id="tKids"></div>
   <div class="tsub" id="tStars"></div>
@@ -1820,6 +1847,7 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
 
 <div class="scrim" id="scrim" dir="rtl" lang="ar"><div class="sheet" id="sheet"></div></div>
 <div class="banner" id="banner" dir="rtl" lang="ar"><h3 id="bannerT"></h3><p id="bannerP"></p></div>
+<div id="storyV" dir="rtl" lang="ar" role="dialog" aria-label="حكاية نبتة"><button class="sx" data-sx aria-label="قفل الحكاية">✕</button><video id="stVid" playsinline preload="none"></video><div class="sq" id="stQ"></div></div>
 <canvas id="fx"></canvas>
 
 <script>
@@ -2899,7 +2927,7 @@ const HCATS=[['learn','🎓','نتعلم','#ff178c'],['world','🌍','العال
 function renderHub(){
   stopArcade();curGame=null;Q=null;SM=null;TR=null;FD=null;MZ=null;DT=SP=XO=BL=null;
   const cats=HCATS,cur=cats.some(c=>c[0]===S.hcat)?S.hcat:'learn',cc=cats.find(c=>c[0]===cur),dg=dailyGame(),dgOn=S.dgDay!==today();
-  $('#playWrap').innerHTML=`${planCard()}
+  $('#playWrap').innerHTML=`${storyCard()}${planCard()}
   <div class="hcats">${cats.map(([k,i,n,c])=>`<button class="hcat ${k===cur?'on':''}" data-hcat="${k}" style="--c:${c};--scn:${SCN[k]}" aria-label="${n}"><span class="hpic"><i>${i}</i></span><b>${n}</b><small>${ar(GAMES.filter(g=>g.cat===k).length)} لعبة</small>${GAMES.some(g=>g.cat===k&&g.id===dg)&&dgOn?'<em>🎯</em>':''}</button>`).join('')}</div>
   <div class="hrib" style="--c:${cc[3]}">${cc[1]} ألعاب ${cc[2]}</div><div class="hub kgrid" style="--c:${cc[3]}">${GAMES.filter(g=>g.cat===cur).map((g,ix)=>`<button class="gcard ${g.id===dg&&dgOn?'daily':''}" data-game="${g.id}" style="--bg:${g.bg};--gc:${cc[3]}" aria-label="${g.name}">${g.id===dg&&dgOn?'<span class="dly">🎯 ×٢</span>':S.gst[g.id]==null?'<span class="new"></span>':''}${sceneCard(g,ix)}<span class="lbl"><span class="nm">${g.name}</span><span class="gs">${starRow(S.gst[g.id]||0)}</span></span></button>`).join('')}</div>`;
   updateTop();
@@ -5735,6 +5763,46 @@ function closeTitle(tab){audio();SND.pop();$('#title').hidden=true;document.body
   if(!S.named)setTimeout(()=>askName(gift),350);else{gift();if(S.name)speak('أهلاً يا '+S.name)}}
 $('#tPlay').onclick=()=>closeTitle('garden');
 $('#tGarden').onclick=()=>closeTitle('map');
+/* =================== STORIES: حكايات نبتة =================== */
+const STORIES=[
+ {id:'worm',n:'نبتة والدودة الجعانة',v:'videos/nabta-ep1.mp4',img:'videos/ep1.webp',
+  q:'مين كان عايز ياكل الوردة؟',ops:['🐛','🐝','🐟'],ok:0},
+ {id:'bee',n:'نبتة والنحلة التايهة',soon:'🐝'}
+];
+const STORY_HOME='https://nabilmokhtar95-alt.github.io/nabta/';
+function storyCard(){const n=STORIES.filter(x=>!x.soon&&!(S.story||{})[x.id]).length;
+  return `<button class="stc" data-stories><i>🎬</i><span><b>حكايات نبتة</b><small>نتفرج على حكاية ونجاوب سؤال</small></span>${n?'<em>جديد</em>':''}</button>`}
+function openStories(){S.story=S.story||{};
+  openSheet('🎬 حكايات نبتة','نتفرج على نبتة وأصحابها',`<div class="stl">${STORIES.map(x=>x.soon?
+   `<button class="soon" disabled aria-label="${x.n} قريباً"><div class="ph">${x.soon}</div><span class="pl">قريباً</span><b>${x.n}</b></button>`:
+   `<button data-story="${x.id}" aria-label="${x.n}"><img src="${x.img}" alt="" loading="lazy">${S.story[x.id]?'<span class="done">⭐</span>':''}<span class="pl">▶</span><b>${x.n}</b></button>`).join('')}</div>`,
+   e=>{const b=e.target.closest('[data-story]');if(b){closeSheet();playStory(b.dataset.story)}});
+  speak('نتفرج على حكاية!')}
+let stCur=null;
+function playStory(id){const x=STORIES.find(s=>s.id===id);if(!x||x.soon)return;stCur=x;audio();
+  const V=$('#storyV'),vid=$('#stVid');V.classList.remove('quiz');V.classList.add('on');
+  S.music&&clearInterval(musicTimer);try{speechSynthesis.cancel()}catch(_){}try{VP.cur&&VP.cur.pause()}catch(_){}
+  vid.onerror=()=>{$('#stQ').innerHTML=`<h3>الحكايات بتشتغل من موقع نبتة 🌱</h3><a class="btn" href="${STORY_HOME}game.html#stories" target="_blank" rel="noopener">افتحوا الموقع</a>`;V.classList.add('quiz')};
+  vid.onended=()=>storyQuiz(x);
+  const mp4=vid.canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');vid.src=mp4?x.v:x.v.replace(/\.mp4$/,'.webm');vid.currentTime=0;vid.controls=true;
+  vid.play().catch(()=>{});}
+function storyQuiz(x){const V=$('#storyV');V.classList.add('quiz');
+  $('#stQ').innerHTML=`<h3>${x.q}</h3><div class="ops">${x.ops.map((o,i)=>`<button data-sop="${i}" aria-label="${o}">${o}</button>`).join('')}</div><button class="again" data-sagain>↺ نتفرج تاني</button>`;
+  speak(x.q)}
+function closeStory(){const V=$('#storyV'),vid=$('#stVid');vid.onerror=null;vid.onended=null;try{vid.pause()}catch(_){}vid.removeAttribute('src');try{vid.load()}catch(_){}V.classList.remove('on','quiz');stCur=null;setMusic()}
+$('#storyV').addEventListener('click',e=>{const t=e.target;
+  if(t.closest('[data-sx]')){SND.tap();closeStory();return}
+  if(t.closest('[data-sagain]')&&stCur){playStory(stCur.id);return}
+  const o=t.closest('[data-sop]');if(!o||!stCur)return;
+  if(+o.dataset.sop===stCur.ok){const first=!(S.story||{})[stCur.id];S.story=S.story||{};S.story[stCur.id]=1;
+    SND.coin();confetti(60);burst(center(o),['#ffd23f','#5fd35b','#ff9a3c'],22);speak('برافو!');
+    if(first){S.coins+=5;updateTop();save();banner('برافو! ⭐','جاوبت سؤال الحكاية وكسبت ٥ عملات 🪙')}
+    setTimeout(closeStory,1800)}
+  else{o.classList.remove('no');void o.offsetWidth;o.classList.add('no');SND.no()}});
+document.addEventListener('click',e=>{if(e.target.closest('[data-stories]')){audio();SND.tap();openStories()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#storyV').classList.contains('on'))closeStory()});
+$('#tStories').onclick=()=>{audio();SND.tap();openStories()};
+
 
 /* =================== LOOP =================== */
 const mascotCtx=$('#mascotCv').getContext('2d'),tCtx=$('#tCv').getContext('2d'),clCtx=$('#closetCv').getContext('2d');
@@ -5776,7 +5844,7 @@ function start(seed){
   openTitle();document.documentElement.classList.remove('boot');
   // deep links from the store: #g=<game id> opens that game, #toys opens our toys
   const deep=()=>{const h=location.hash,m=h.match(/g=(\w+)/),id=m&&m[1];const go=t=>{$('#title').hidden=true;document.body.classList.remove('ontitle');overlayOn=null;setTab(t)};
-    if(id&&GAMES.some(g=>g.id===id)){go('play');setTimeout(()=>openGame(id),120)}else if(/toys/.test(h))go('toys')};
+    if(id&&GAMES.some(g=>g.id===id)){go('play');setTimeout(()=>openGame(id),120)}else if(/stories/.test(h)){go('play');setTimeout(openStories,200)}else if(/toys/.test(h))go('toys')};
   setTimeout(deep,150);addEventListener('hashchange',deep);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{catchUp();last=performance.now()}});
   addEventListener('pagehide',save);
