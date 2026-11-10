@@ -1,0 +1,211 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden;background:#000;font-family:"Noto Kufi Arabic","Noto Sans Arabic","Noto Naskh Arabic",sans-serif}
+#view{position:absolute;inset:0;overflow:hidden}
+#cam{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;will-change:transform}
+#sky{position:absolute;inset:-200px -300px;background:linear-gradient(#69bdf0 0%,#a9defa 50%,#e8f8ff 72%)}
+#heat{position:absolute;inset:-200px -300px;background:radial-gradient(circle at 78% 22%,#ffb347,transparent 60%);opacity:0;mix-blend-mode:soft-light}
+#sunW{position:absolute;left:960px;top:70px;width:150px;height:150px}
+#rays{position:absolute;inset:-70px;background:repeating-conic-gradient(#fff3a8 0 9deg,transparent 9deg 22.5deg);border-radius:50%;opacity:.55;-webkit-mask:radial-gradient(circle,#000 35%,transparent 70%);mask:radial-gradient(circle,#000 35%,transparent 70%)}
+#sun{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fffbd0,#ffd84a 55%,#ffb300);box-shadow:0 0 70px #ffe27a}
+.cl{position:absolute;height:54px;background:#fff;border-radius:60px;opacity:.96;filter:drop-shadow(0 8px 0 rgba(130,190,230,.25))}
+.cl:before,.cl:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cl:before{width:52%;height:170%;top:-80%;left:14%}.cl:after{width:38%;height:130%;top:-50%;left:52%}
+svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:visible}
+.sp{position:absolute;transform-origin:50% 100%;will-change:transform;user-select:none}
+.sh{position:absolute;height:22px;border-radius:50%;background:rgba(30,70,20,.28);filter:blur(3px)}
+#fx,#fxf{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;will-change:transform}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 62%,rgba(10,50,30,.28));pointer-events:none}
+#sub{position:absolute;left:0;right:0;bottom:44px;text-align:center}
+#sub span{display:inline-block;background:rgba(255,255,255,.96);color:#1f5f2a;font-size:40px;font-weight:800;padding:8px 34px 12px;border-radius:40px;box-shadow:0 6px 0 rgba(31,95,42,.9)}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden}
+#title{background:radial-gradient(circle at 50% 42%,#a8e86e,#3f9a2e 75%)}
+#end{background:radial-gradient(circle at 50% 42%,#ffe08a,#f29a1e 78%)}
+.burst{position:absolute;width:1700px;height:1700px;left:50%;top:46%;margin:-850px;background:repeating-conic-gradient(rgba(255,255,255,.14) 0 10deg,transparent 10deg 20deg);border-radius:50%}
+.t1{position:relative;font-size:84px;font-weight:900;line-height:1.3;text-shadow:0 7px 0 rgba(0,0,0,.2)}
+.t2{position:relative;font-size:34px;font-weight:700;margin-top:10px;background:rgba(0,0,0,.18);padding:4px 26px 8px;border-radius:30px}
+.tc{position:absolute;bottom:-10px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+</style></head><body>
+<div id="view">
+ <div id="cam">
+  <div id="sky"></div><div id="heat"></div>
+  <div id="sunW"><div id="rays"></div><div id="sun"></div></div>
+  <div class="cl" id="c1" style="width:210px;top:120px"></div><div class="cl" id="c2" style="width:150px;top:210px"></div><div class="cl" id="c3" style="width:120px;top:80px"></div>
+  <svg class="L" id="far" viewBox="-300 0 1880 720"><path d="M-300 470 Q-50 360 200 440 T700 420 T1200 400 T1580 440 V720 H-300Z" fill="#a9df86"/>
+   <g fill="#8fd16a"><circle cx="90" cy="405" r="34"/><circle cx="130" cy="390" r="44"/><circle cx="175" cy="408" r="32"/><circle cx="1010" cy="380" r="40"/><circle cx="1060" cy="368" r="52"/><circle cx="1112" cy="386" r="36"/></g></svg>
+  <svg class="L" id="mid" viewBox="-300 0 1880 720"><path d="M-300 520 Q0 440 300 500 T900 480 T1580 500 V720 H-300Z" fill="#7cc75a"/>
+   <g id="trees"></g><g id="fence"></g></svg>
+  <svg class="L" id="gnd" viewBox="-300 0 1880 720"><path d="M-300 560 H1580 V720 H-300Z" fill="#5fae40"/><path d="M-300 640 Q300 618 640 636 T1580 628 V720 H-300Z" fill="#4c9a33"/>
+   <g id="tufts"></g><g id="flw"></g>
+   <ellipse cx="640" cy="606" rx="120" ry="26" fill="#6b4226"/><ellipse cx="640" cy="598" rx="104" ry="20" fill="#8a5a35"/></svg>
+  <div id="shadows"></div>
+  <div id="fx"></div>
+  <img class="sp" id="bun" src="a/ZART_bunny_sleep.webp">
+  <img class="sp" id="plant" src="a/PART_sunflower_seed.webp">
+  <img class="sp" id="worm" src="a/BART_worm.webp">
+  <img class="sp" id="nab" src="a/NART_pose_run.webp">
+  <img class="sp" id="bf1" src="a/ZART_butterfly_idle.webp"><img class="sp" id="bf2" src="a/ZART_butterfly_happy.webp">
+  <div id="fxf"></div>
+  <svg class="L" id="fg" viewBox="-300 0 1880 720"><g id="fgt"></g></svg>
+ </div>
+ <div id="vig"></div><div id="flash"></div>
+ <div id="sub"></div>
+ <div class="card" id="title"><div class="burst" id="tb"></div><div class="t1" id="tt">نبتة والدودة الجعانة</div><div class="t2" id="ts">حكايات جنينة نبتة · الحلقة الأولى</div>
+  <img class="tc" id="tn" src="a/NART_pose_wave.webp" style="height:300px;right:90px"><img class="tc" id="tw" src="a/BART_worm.webp" style="height:190px;left:110px"></div>
+ <div class="card" id="end"><div class="burst" id="eb"></div><div class="t1">الوردة فتّحت!</div><div class="t2">استنوا الحكاية الجاية مع نبتة</div>
+  <img class="tc" id="en" src="a/NART_pose_cheer.webp" style="height:300px;right:100px"><img class="tc" id="ebn" src="a/ZART_bunny_happy.webp" style="height:230px;left:120px"></div>
+</div>
+<script>
+const ENV=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.55, 0.57, 0.6, 0.25, 0.27, 0.44, 1.0, 0.83, 0.61, 0.67, 0.55, 0.4, 0.42, 0.35, 0.34, 0.4, 0.11, 0.01, 0.08, 0.0, 0.0, 0.28, 0.51, 0.49, 0.57, 0.78, 0.66, 0.53, 0.9, 0.7, 0.56, 0.17, 0.0, 0.0, 0.0, 0.03, 0.63, 0.43, 0.32, 0.15, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.14, 0.22, 0.93, 0.89, 0.43, 0.64, 0.57, 0.94, 0.36, 0.44, 0.6, 0.37, 0.01, 0.1, 0.07, 0.01, 0.55, 0.47, 0.32, 0.1, 0.23, 0.13, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.69, 0.75, 0.88, 0.69, 0.61, 0.85, 0.78, 0.89, 0.66, 0.4, 0.92, 0.74, 0.76, 0.69, 0.72, 0.64, 0.48, 0.41, 0.11, 0.13, 0.91, 0.67, 0.49, 0.79, 0.86, 0.88, 1.0, 1.0, 0.76, 0.89, 0.98, 0.98, 1.0, 1.0, 0.81, 0.57, 0.56, 0.4, 0.07, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.29, 1.0, 1.0, 0.73, 0.48, 0.58, 0.48, 0.34, 0.1, 0.13, 0.08, 0.9, 0.87, 0.36, 0.45, 0.3, 0.08, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.68, 0.52, 0.46, 0.76, 1.0, 1.0, 0.82, 0.99, 0.87, 0.84, 0.73, 0.63, 0.65, 0.8, 0.27, 0.0, 0.27, 0.41, 0.49, 0.88, 0.93, 0.89, 0.92, 0.9, 0.83, 0.79, 0.8, 0.74, 0.47, 0.1, 0.04, 0.02, 0.01, 0.0, 0.0, 0.0, 0.76, 1.0, 1.0, 0.37, 0.27, 0.27, 0.16, 0.14, 0.67, 0.82, 1.0, 1.0, 1.0, 0.86, 0.37, 0.04, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.36, 0.34, 0.74, 0.98, 0.85, 0.72, 1.0, 0.8, 0.52, 0.35, 0.72, 0.35, 0.01, 0.0, 0.0, 0.13, 0.18, 0.09, 0.02, 0.0, 0.0, 0.0, 0.0, 0.16, 0.48, 0.83, 0.75, 0.03, 0.64, 0.87, 0.67, 0.55, 0.83, 0.94, 0.98, 0.92, 0.52, 0.48, 0.21, 0.75, 0.76, 0.6, 0.85, 0.99, 0.83, 0.6, 0.24, 0.08, 0.0, 0.09, 0.2, 0.14, 0.14, 0.07, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.61, 0.53, 0.54, 0.45, 0.46, 0.38, 0.9, 0.92, 0.6, 0.38, 0.82, 0.57, 0.31, 0.53, 0.61, 0.52, 0.56, 0.4, 0.84, 0.7, 0.77, 0.73, 0.88, 0.94, 0.82, 0.58, 0.57, 0.28, 0.18, 0.71, 0.34, 0.15, 0.02, 0.0, 0.0, 0.0, 0.0, 0.44, 0.74, 0.52, 0.18, 0.01, 0.64, 0.65, 0.82, 0.78, 0.58, 0.24, 0.61, 0.44, 0.34, 0.51, 0.31, 0.16, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.13, 0.39, 1.0, 1.0, 1.0, 1.0, 0.9, 0.69, 0.43, 0.41, 0.36, 0.02, 0.01, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.13, 0.39, 1.0, 1.0, 1.0, 1.0, 0.9, 0.69, 0.43, 0.41, 0.36, 0.02, 0.01, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.55, 0.71, 0.74, 0.62, 0.59, 0.49, 0.47, 0.77, 0.91, 0.74, 0.87, 0.86, 1.0, 1.0, 0.83, 0.71, 0.5, 0.01, 0.0, 0.0, 0.0, 0.59, 0.79, 0.75, 0.6, 0.5, 0.32, 0.15, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.12, 0.26, 0.57, 0.73, 0.68, 0.91, 0.89, 0.56, 0.63, 0.97, 1.0, 0.76, 0.92, 0.89, 0.72, 0.42, 0.22, 0.43, 0.34, 0.28, 0.13, 0.03, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.42, 0.83, 0.77, 0.55, 0.49, 0.42, 0.55, 0.89, 1.0, 0.7, 0.9, 0.51, 0.71, 0.67, 0.63, 0.59, 0.79, 0.84, 0.94, 0.94, 0.83, 0.53, 0.55, 1.0, 0.82, 0.52, 0.44, 0.28, 0.24, 0.21, 0.08, 0.02, 0.0, 0.0, 0.0, 0.0, 0.4, 0.82, 0.71, 0.34, 0.38, 0.31, 0.24, 0.3, 0.66, 0.82, 0.98, 0.29, 0.47, 0.92, 0.64, 0.38, 0.19, 0.03, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.52, 0.71, 0.76, 0.41, 0.53, 0.88, 0.87, 0.81, 0.7, 0.92, 0.46, 0.18, 0.68, 1.0, 0.68, 0.49, 0.04, 0.14, 0.27, 0.26, 0.3, 0.96, 1.0, 1.0, 0.91, 0.57, 0.01, 0.0, 0.0, 0.08, 0.13, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.32, 0.58, 0.59, 0.79, 0.98, 1.0, 0.76, 1.0, 1.0, 1.0, 0.91, 0.34, 0.34, 0.6, 0.96, 0.87, 0.94, 0.82, 0.7, 0.69, 0.53, 0.4, 0.29, 0.05, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.81, 1.0, 0.45, 0.2, 1.0, 1.0, 1.0, 0.13, 0.19, 0.71, 1.0, 1.0, 0.88, 0.7, 0.48, 0.37, 0.17, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const cl=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,k)=>a+(b-a)*k;
+const eio=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,eout=k=>1-Math.pow(1-k,3),eback=k=>{const c=1.70158;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+const seg=(t,a,b,e=eio)=>e(cl((t-a)/(b-a),0,1));
+// keyframes: [[time,value],...] with easing between
+function kf(t,K,e=eio){if(t<=K[0][0])return K[0][1];for(let i=1;i<K.length;i++){if(t<=K[i][0])return lerp(K[i-1][1],K[i][1],e((t-K[i-1][0])/(K[i][0]-K[i-1][0])))}return K[K.length-1][1]}
+const hop=(t,a,d,h)=>t>=a&&t<a+d?Math.sin((t-a)/d*Math.PI)*h:0;
+// squash on landing at time a
+const land=(t,a)=>t>=a&&t<a+.28?Math.sin((t-a)/.28*Math.PI):0;
+// static scenery
+{const tr=$('trees');[[-180,470,1],[330,468,.8],[820,455,.9],[1380,470,1.1]].forEach(([x,y,s])=>{tr.insertAdjacentHTML('beforeend',`<g transform="translate(${x} ${y}) scale(${s})"><rect x="-9" y="0" width="18" height="60" rx="8" fill="#8a5a35"/><circle cx="0" cy="-30" r="52" fill="#4fa63a"/><circle cx="-34" cy="-6" r="34" fill="#5cb445"/><circle cx="36" cy="-8" r="36" fill="#449a32"/><circle cx="14" cy="-48" r="14" fill="#7cd35c" opacity=".7"/></g>`)});
+ const fe=$('fence');let h='';for(let x=-300;x<1580;x+=46)h+=`<rect x="${x}" y="500" width="16" height="62" rx="7" fill="#fff6e3"/>`;h+=`<rect x="-300" y="516" width="1880" height="9" fill="#f3e3c2"/><rect x="-300" y="540" width="1880" height="9" fill="#f3e3c2"/>`;fe.innerHTML=h;
+ let tf='';for(let i=0;i<70;i++){const x=-300+i*27+Math.sin(i*3)*8,hh=10+(i*7)%14;tf+=`<path d="M${x} 562 q4 -${hh} 8 0 q4 -${hh+6} 8 0" fill="#4c9a33"/>`}$('tufts').innerHTML=tf;
+ let fl='';[[60,660,'#ff7fb0'],[210,690,'#ffd23f'],[420,668,'#fff'],[860,676,'#ff7fb0'],[1010,694,'#ffd23f'],[1190,664,'#fff'],[-120,680,'#ffd23f'],[1350,690,'#ff7fb0']].forEach(([x,y,c],i)=>{fl+=`<g class="fw" data-i="${i}" transform="translate(${x} ${y})"><rect x="-2" y="0" width="4" height="26" fill="#3f8a2b"/>${[0,72,144,216,288].map(a=>`<circle cx="${Math.cos(a*Math.PI/180)*9}" cy="${Math.sin(a*Math.PI/180)*9}" r="8" fill="${c}"/>`).join('')}<circle r="6" fill="#ffb300"/></g>`});$('flw').innerHTML=fl;
+ let fg='';for(let i=0;i<40;i++){const x=-300+i*48+Math.sin(i*5)*12,hh=34+(i*13)%30;fg+=`<path d="M${x} 730 q10 -${hh} 16 -${hh+20} q4 ${hh} 10 ${hh+20}Z" fill="#3f8a2b"/>`}$('fgt').innerHTML=fg}
+const SUBS=[[4.6,6.2,'أهلاً! أنا نبتة'],[7,8.3,'نزرع بذرة!'],[10,11.8,'البذرة محتاجة مية!'],[13.3,14.3,'تحفة!'],[15.4,17.9,'الزرع عطشان! نسقيه'],[18.3,20.8,'شربت! هتكبر دلوقتي'],[23.2,25.5,'الدودة عند الوردة! نطردها'],[26.6,27.6,'كمان!'],[28.2,29.2,'كمان!'],[29.8,31.3,'آخر نطة!'],[32.4,33.6,'هايل!'],[34,36.5,'الزرع جاهز! نحصده'],[38,39.6,'أرنوب مبسوط'],[39.9,41,'برافو!'],[41.3,42.3,'كسبنا!']];
+function put(el,cx,foot,h,o={}){const s=el.style;s.height=h+'px';s.left=cx+'px';s.top=(foot-h)+'px';s.opacity=o.op==null?1:o.op;
+  s.transform=`translate(-50%,0) rotate(${o.rot||0}deg) scale(${(o.flip?-1:1)*(o.sx||1)},${o.sy||1})`}
+function src(el,n){const u='a/'+n+'.webp';if(el.getAttribute('src')!==u)el.setAttribute('src',u)}
+const JUMPS=[26.55,28.15,29.75],JD=.62;
+window.setT=function(t){
+  const f=Math.round(t*30),talk=ENV[f]||0;
+  // ---------- cards ----------
+  const tOut=seg(t,2.5,3.1);$('title').style.transform=`translateY(${-tOut*760}px)`;$('title').style.display=t<3.2?'flex':'none';
+  $('tb').style.transform=`rotate(${t*14}deg)`;$('tt').style.transform=`scale(${seg(t,.15,.8,eback)})`;$('ts').style.transform=`scale(${seg(t,.6,1.1,eback)})`;
+  $('tn').style.transform=`translateY(${(1-seg(t,.5,1.1,eback))*340-Math.abs(Math.sin(t*5))*14}px)`;$('tw').style.transform=`translateY(${(1-seg(t,.9,1.5,eback))*260}px) scaleX(${1+Math.sin(t*9)*.06})`;
+  const eIn=seg(t,43.2,43.9,eout);$('end').style.transform=`translateY(${(1-eIn)*760}px)`;$('end').style.display=t>43.1?'flex':'none';
+  $('eb').style.transform=`rotate(${t*14}deg)`;$('en').style.transform=`translateY(${-Math.abs(Math.sin(t*6))*26}px)`;$('ebn').style.transform=`translateY(${-Math.abs(Math.sin(t*6+1))*20}px)`;
+  // ---------- sky ----------
+  $('c1').style.left=(60+t*7)+'px';$('c2').style.left=(520-t*5)+'px';$('c3').style.left=(760+t*3)+'px';
+  const hot=kf(t,[[13.8,0],[15,1],[17.8,1],[19.2,0]]);
+  $('heat').style.opacity=hot*.9;$('rays').style.transform=`rotate(${t*10}deg) scale(${1+hot*.5+Math.sin(t*3)*.04})`;$('sun').style.transform=`scale(${1+hot*.25})`;
+  document.querySelectorAll('.fw').forEach(g=>{const i=+g.dataset.i,b=g.getAttribute('data-b')||g.getAttribute('transform');g.setAttribute('data-b',b);g.setAttribute('transform',b+` rotate(${Math.sin(t*2+i)*6})`)});
+  // ---------- camera ----------
+  const z=kf(t,[[3,1.12],[6.4,1],[7.6,1],[8.6,1.55],[9.6,1.55],[10.4,1.25],[13,1.25],[14.2,1.05],[15.4,1.3],[20.6,1.3],[21.4,1],[22.4,1.5],[25.6,1.5],[26.3,1.15],[30.4,1.15],[30.7,1],[32.3,1],[33.2,1.45],[36.6,1.45],[37.4,1],[43,1.08]]);
+  const cx=kf(t,[[3,560],[6.4,640],[7.6,640],[8.6,640],[10.4,700],[14.2,640],[15.4,660],[20.6,660],[21.4,640],[22.4,360],[25.6,470],[26.3,560],[30.4,560],[30.7,640],[33.2,650],[36.6,650],[37.4,640]]);
+  const cy=kf(t,[[3,380],[6.4,360],[8.6,520],[9.6,520],[10.4,470],[14.2,400],[15.4,440],[20.6,440],[21.4,360],[22.4,500],[25.6,500],[26.3,430],[30.4,430],[30.7,360],[33.2,430],[36.6,430],[37.4,360]]);
+  let shx=0,shy=0;for(const a of [27.17,28.77,30.37]){if(t>=a&&t<a+.35){const k=1-(t-a)/.35,amp=(a>30?16:8)*k;shx+=Math.sin(t*90)*amp;shy+=Math.cos(t*70)*amp}}
+  const fxw=cl(cx,640/z,1280-640/z),fyw=cl(cy,360/z,720-360/z);
+  $('cam').style.transform=`translate(${640-fxw*z+shx}px,${360-fyw*z+shy}px) scale(${z})`;
+  // parallax (layers drift a little against the camera)
+  $('far').style.transform=`translateX(${(fxw-640)*.35}px)`;$('mid').style.transform=`translateX(${(fxw-640)*.18}px)`;$('fg').style.transform=`translateX(${-(fxw-640)*.5}px) translateY(${(z-1)*40}px)`;
+  $('sunW').style.transform=`translateX(${(fxw-640)*.5}px)`;
+  // ---------- Nabta ----------
+  let nx=820,ny=600,nh=290,pose='NART_front',rot=0,sx=1,sy=1,flip=false;
+  if(t<4.5){pose='NART_pose_run';nx=lerp(-160,820,seg(t,3.1,4.5,eout));ny=600-Math.abs(Math.sin(t*16))*14;rot=6}
+  else if(t<6.4){pose='NART_pose_wave';rot=Math.sin(t*7)*3}
+  else if(t<8.1){pose='NART_pose_cheer';ny=600-hop(t,7.0,.5,60)-hop(t,7.55,.45,36)}
+  else if(t<9.7){pose='NART_face_happy'}
+  else if(t<10.9){pose='NART_face_think';rot=Math.sin(t*5)*2}
+  else if(t<12.9){pose='NART_pose_water';nx=790;rot=-6+Math.sin(t*9)*2}
+  else if(t<14.6){pose='NART_pose_cheer';ny=600-hop(t,13.2,.5,70)-hop(t,13.75,.45,40)}
+  else if(t<15.2){pose='NART_face_surprised'}
+  else if(t<17.5){pose='NART_face_sad';rot=Math.sin(t*3)*2}
+  else if(t<19.6){pose='NART_pose_water';nx=790;rot=-6+Math.sin(t*9)*2}
+  else if(t<21.6){pose='NART_face_happy';ny=600-hop(t,19.8,.45,40)}
+  else if(t<26.3){pose=t<22.6?'NART_face_think':'NART_face_surprised';if(t>22.6){ny=600-hop(t,22.6,.3,50);rot=Math.sin(t*30)*(t<23.2?3:0)}}
+  else if(t<31){pose='NART_pose_jump';
+    // hop over to the worm, bounce on it three times
+    const WX=470;nx=820;ny=600;let air=false;
+    JUMPS.forEach((a,i)=>{if(t<a)return;const k=cl((t-a)/JD,0,1),y0=i?505:600;nx=lerp(i?WX+10:820,WX+10,eout(k));ny=lerp(y0,505,k)-Math.sin(k*Math.PI)*(i==2?260:190);air=k<1});
+    if(t<JUMPS[0])pose='NART_face_surprised';
+    const lnd=JUMPS.reduce((m,a)=>Math.max(m,land(t,a+JD)),0);sy=1-lnd*.2;sx=1+lnd*.18;
+    if(air){sy=1.06;sx=.95;rot=-8}
+    if(t>30.4)ny=lerp(505,600,seg(t,30.4,30.75))}
+  else if(t<33){pose='NART_pose_cheer';nx=lerp(480,820,seg(t,31,31.9));ny=600-Math.abs(Math.sin((t-31)*7))*30}
+  else if(t<34){pose='NART_face_surprised';ny=600-hop(t,33.2,.35,40)}
+  else if(t<37.6){pose='NART_pose_harvest';nx=lerp(820,880,seg(t,34,34.6));rot=Math.sin(t*4)*2}
+  else{pose=Math.floor(t*2.5)%2?'NART_pose_dance':'NART_pose_cheer';nx=lerp(880,850,seg(t,37.6,38));ny=600-Math.abs(Math.sin(t*6))*34;rot=Math.sin(t*6)*4}
+  // talking: body breathes with the voice
+  sy*=1+talk*.07;sx*=1-talk*.03;rot+=talk*Math.sin(t*22)*2.5;
+  src($('nab'),pose);put($('nab'),nx,ny,nh,{rot,sx,sy,flip});
+  // ---------- plant ----------
+  let ps='PART_sunflower_seed',ph=0,psx=1,psy=1,prot=0;
+  if(t>=8.55){ph=84;const k=seg(t,8.55,8.9,eback);psx=psy=k}
+  if(t>=10.9&&t<12)prot=Math.sin(t*20)*2;
+  if(t>=12){ps='PART_sunflower_sprout';ph=130;psx=psy=.6+.4*seg(t,12,12.4,eback)}
+  if(t>=13){ps='PART_sunflower_grow';ph=225;psx=psy=.6+.4*seg(t,13,13.45,eback);prot=Math.sin(t*2)*1.5}
+  if(t>=15&&t<18.7){ps='PART_sunflower_wilt';ph=215;psx=psy=1;prot=Math.sin(t*2)*2;if(t<15.4){psy=lerp(1.1,1,seg(t,15,15.4))}}
+  if(t>=18.7){ps='PART_sunflower_grow';ph=225;psx=psy=.75+.25*seg(t,18.7,19.15,eback);prot=Math.sin(t*2)*1.5}
+  if(t>=23.6&&t<30.4){prot=Math.sin(t*26)*2.2}
+  JUMPS.forEach(a=>{const l=land(t,a+JD);if(l){psy*=1-l*.05}});
+  if(t>=33.2){ps='PART_sunflower_ready';ph=300;psx=psy=.5+.5*seg(t,33.2,33.8,eback);prot=Math.sin(t*2.4)*3}
+  src($('plant'),ps);put($('plant'),640,604,ph,{sx:psx,sy:psy,rot:prot});
+  // ---------- worm ----------
+  let wx=-200,wy=600,wh=150,ws='BART_worm',wsx=1,wsy=1,wrot=0,wop=1;
+  if(t>=21&&t<30.4){const k=seg(t,21.2,24.6,x=>x);wx=lerp(-140,470,k);
+    const inch=t<24.6?Math.sin(t*12.566):Math.sin(t*5)*.3;wsx=1+inch*.12;wsy=1-inch*.1;   // inching squash and stretch
+    if(t>=24.6)wrot=Math.sin(t*6)*3;
+    JUMPS.forEach(a=>{const l=land(t,a+JD);if(l){wsy*=1-l*.45;wsx*=1+l*.3}});
+    if(t>JUMPS[0]+JD){ws='BART_worm_d';wrot=Math.sin(t*24)*5}}
+  if(t>=30.4){ws='BART_worm_d';const k=seg(t,30.4,32,eout);wx=lerp(470,-80,k);wy=600-k*640;wrot=-k*720;wsx=wsy=1-k*.75;wop=1-seg(t,31.6,32)}
+  src($('worm'),ws);put($('worm'),wx,wy,wh,{sx:wsx,sy:wsy,rot:wrot,op:t<21?0:wop});
+  // ---------- bunny ----------
+  let bs='ZART_bunny_sleep',bx=1090,by=602,bh=185,brot=0,bsx=1,bsy=1;
+  if(t<5.2){bsy=1+Math.sin(t*2.5)*.03}
+  else if(t<15){bs='ZART_bunny_idle';by=602-hop(t,5.2,.4,50);brot=Math.sin(t*3)*2}
+  else if(t<18.7){bs='ZART_bunny_idle';brot=Math.sin(t*3)*2;bsy=.97}
+  else if(t<22.6){bs='ZART_bunny_happy';by=602-hop(t,19,.45,40)}
+  else if(t<30.4){bs='ZART_bunny_idle';bx=1090+Math.sin(t*40)*3;bsx=.96}
+  else if(t<37){bs='ZART_bunny_happy';by=602-Math.abs(Math.sin((t-30.4)*5))*26}
+  else{bs='ZART_bunny_happy';bx=lerp(1090,960,seg(t,37.1,38));by=602-hop(t,37.15,.42,70)-hop(t,37.6,.42,70)-(t>38?Math.abs(Math.sin(t*6+1))*30:0);brot=Math.sin(t*6)*4}
+  src($('bun'),bs);put($('bun'),bx,by,bh,{rot:brot,sx:bsx,sy:bsy});
+  // ---------- butterflies ----------
+  const b1x=kf(t,[[3,1400],[7,980],[13,300],[20,180],[21.5,-200],[33,-200],[35.5,560],[43,480]]),b1y=250+Math.sin(t*2.2)*40-(t>33?seg(t,33,35.5)*-80:0);
+  put($('bf1'),b1x,b1y+Math.sin(t*9)*6,70,{sx:1+Math.sin(t*26)*.12,rot:Math.sin(t*3)*8});
+  const b2x=kf(t,[[33,1500],[36,760],[43,820]]),b2y=300+Math.sin(t*2.6+1)*36;
+  put($('bf2'),b2x,b2y,64,{sx:1+Math.sin(t*28)*.12,rot:Math.sin(t*3+2)*8,op:t>32.5?1:0});
+  // ---------- shadows ----------
+  const shd=(x,w,air)=>`<div class="sh" style="left:${x-w/2}px;top:592px;width:${w}px;opacity:${cl(1-air/260,.25,1)};transform:scale(${cl(1-air/400,.5,1)})"></div>`;
+  $('shadows').innerHTML=shd(nx,150,600-ny)+shd(bx,110,602-by)+(t>=21&&t<30.6?shd(wx,120,0):'');
+  // ---------- particles ----------
+  let fx='',ff='';const P=(x,y,s,html,op=1,rot=0)=>`<div class="p" style="left:${x}px;top:${y}px;opacity:${op};transform:translate(-50%,-50%) scale(${s}) rotate(${rot}deg);font-size:40px">${html}</div>`;
+  const dot=(x,y,r,c,op=1)=>`<div class="p" style="left:${x-r}px;top:${y-r}px;width:${r*2}px;height:${r*2}px;border-radius:50%;background:${c};opacity:${op}"></div>`;
+  // run dust
+  if(t>3.1&&t<4.7)for(let i=0;i<5;i++){const k=((t*3+i/5)%1);ff+=dot(nx-70-k*60,596-k*26,8+k*10,'#fff',(1-k)*.6)}
+  // seed toss
+  if(t>=8&&t<8.55){const k=(t-8)/.55;ff+=`<img class="p" src="a/PART_sunflower_item.webp" style="left:${lerp(760,640,k)-22}px;top:${lerp(470,580,k)-Math.sin(k*Math.PI)*120-22}px;width:44px;transform:rotate(${k*540}deg)">`}
+  if(t>=8.55&&t<9.2){const k=(t-8.55)/.65;for(let i=0;i<8;i++){const a=i/8*Math.PI*2;ff+=dot(640+Math.cos(a)*k*70,590-Math.abs(Math.sin(a))*k*40,7*(1-k)+3,'#a9744a',1-k)}}
+  // watering
+  for(const [a,b] of [[10.95,12.6],[17.6,19.3]]){if(t>=a&&t<b){for(let i=0;i<9;i++){const k=((t-a)*1.7+i/9)%1;ff+=dot(lerp(716,650,k)+Math.sin(i*7)*8,lerp(455,585,k*k),5,'#39a9ff',1-k*.3)}
+     for(let i=0;i<4;i++){const k=((t-a)*2+i/4)%1;ff+=dot(640+(i-1.5)*26*k,596-Math.sin(k*Math.PI)*22,4,'#7fd0ff',1-k)}}}
+  // thirsty: heat shimmer drops of sweat
+  if(t>=15.2&&t<17.6){for(let i=0;i<2;i++){const k=((t-15.2)*.9+i/2)%1;ff+=dot(nx+(i?48:-52),ny-190+k*60,6,'#8fd8ff',1-k)}ff+=P(640,ny-330+Math.sin(t*5)*6,1,'💧',.9)}
+  // growth sparkles
+  for(const a of [12,13,18.7,33.2]){if(t>=a&&t<a+.9){const k=(t-a)/.9,R=a>30?150:80;for(let i=0;i<(a>30?12:7);i++){const an=i/(a>30?12:7)*Math.PI*2+a;ff+=P(640+Math.cos(an)*R*eout(k),530-(a>30?60:0)+Math.sin(an)*R*.8*eout(k),1.1*(1-k)+.2,'✨',1-k)}}}
+  // worm thought bubble
+  if(t>=22.4&&t<26.2){const s=seg(t,22.4,22.8,eback);fx+=`<div class="p" style="left:${wx+40}px;top:${410+Math.sin(t*4)*5}px;transform:translate(-50%,-50%) scale(${s});background:#fff;border-radius:50%;width:92px;height:80px;display:grid;place-items:center;font-size:44px;box-shadow:0 5px 0 rgba(0,0,0,.12)">🌻</div>`+dot(wx+52,470,9,'#fff')+dot(wx+58,488,5,'#fff')}
+  // alarm marks
+  if(t>=22.6&&t<23.4)ff+=P(nx+70,ny-270,1+Math.sin(t*30)*.1,'❗');if(t>=22.8&&t<23.6)ff+=P(bx-50,by-170,.8,'❗');
+  // stomp stars
+  [27.17,28.77,30.37].forEach((a,j)=>{if(t>=a&&t<a+.55){const k=(t-a)/.55;for(let i=0;i<(j==2?10:6);i++){const an=Math.PI+i/(j==2?9:5)*Math.PI;ff+=P(480+Math.cos(an)*(j==2?150:95)*eout(k),575+Math.sin(an)*(j==2?120:75)*eout(k),(j==2?1.3:1)*(1-k*.6),'⭐',1-k,k*200)}
+     for(let i=0;i<6;i++){ff+=dot(480+(i-2.5)*40*k,596-Math.sin(k*Math.PI)*18,9*(1-k)+2,'#fff',(1-k)*.7)}}});
+  // worm trail + twinkle
+  if(t>=30.5&&t<32){for(let i=1;i<6;i++){const tk=t-i*.06;if(tk>30.4){const k=eout(cl((tk-30.4)/1.6,0,1));ff+=dot(lerp(470,-80,k),540-k*640,10-i,'#fff',.5-i*.07)}}}
+  if(t>=31.9&&t<32.5){const k=(t-31.9)/.6;ff+=P(-40*0+30,40,2*Math.sin(k*Math.PI),'✨',1)}
+  // bloom rays behind the flower
+  if(t>=33.2&&t<43.2){const s=seg(t,33.2,34,eout);fx+=`<div class="p" style="left:${640-210}px;top:${400-210}px;width:420px;height:420px;border-radius:50%;opacity:${.55*s};transform:scale(${s}) rotate(${t*20}deg);background:repeating-conic-gradient(#fff6a8 0 10deg,transparent 10deg 24deg);-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%)"></div>`}
+  // hearts from bunny
+  if(t>=38&&t<43){for(let i=0;i<4;i++){const k=((t-38)*.7+i/4)%1;ff+=P(bx+Math.sin(i*9+k*4)*40,by-150-k*130,.8+k*.4,'💛',1-k)}}
+  // confetti
+  if(t>=39.6&&t<43.6){const cols=['#ff5a7a','#ffd23f','#4fd36a','#39a9ff','#b884f0','#ff9a3c'];for(let i=0;i<60;i++){const s0=(i*97)%1280,sp=160+(i*53)%200,y=-40+((t-39.6)*sp+(i*131)%700)%800,x=s0+Math.sin(t*3+i)*30;ff+=`<div class="p" style="left:${x}px;top:${y}px;width:12px;height:16px;border-radius:3px;background:${cols[i%6]};transform:rotate(${t*200+i*40}deg)"></div>`}}
+  $('fx').innerHTML=fx;$('fxf').innerHTML=ff;
+  $('flash').style.opacity=t>=30.37&&t<30.6?(1-(t-30.37)/.23)*.7:(t>=33.2&&t<33.5?(1-(t-33.2)/.3)*.5:0);
+  // ---------- subtitles ----------
+  const s=SUBS.find(s=>t>=s[0]&&t<s[1]);$('sub').innerHTML=s&&t>3.2&&t<43.2?`<span style="transform:scale(${.85+.15*seg(t,s[0],s[0]+.2,eback)})">${s[2]}</span>`:'';
+};
+setT(0);
+</script></body></html>
