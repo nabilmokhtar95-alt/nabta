@@ -2004,6 +2004,8 @@ const SND={
  ready:()=>{tone(1175,.12,'sine',.08);tone(1568,.18,'sine',.08,.1)},
  hit:()=>{tone(180,.2,'square',.1,0,60);noise(.15,.25)}
 };
+// haptics: a light buzz with the sounds that mean something (Android; iOS ignores it)
+{const HAP={no:[40,30,40],harvest:18,level:[20,40,20,40,40],coin:10,hit:30,bug:14};for(const k in HAP){const f=SND[k];SND[k]=(...a)=>{try{navigator.vibrate&&navigator.vibrate(HAP[k])}catch(_){}return f(...a)}}}
 const SCALE=[392,440,523,587,659,784,880];
 function setMusic(){clearInterval(musicTimer);if(!S.music)return;audio();musicTimer=setInterval(()=>{
   if(!S.music||!ac)return;const f=rnd(SCALE),t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();

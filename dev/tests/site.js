@@ -12,6 +12,8 @@ const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)process.exitCode=1};
  await s.fill('#oPhone','٠١٠١٢٣٤٥٦٧٨');await s.click('#orderF button[type=submit]');ok((await s.textContent('#oMsg')||'').includes('01012345678'),'store builds the order message with latin digits');
  await s.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=700){scrollTo(0,y);await new Promise(r=>setTimeout(r,50))}});await s.waitForTimeout(800);
  ok(await s.evaluate(()=>[...document.images].every(i=>!i.getAttribute('src')||!i.complete||i.naturalWidth>0)),'store images all load');
+ ok(await s.evaluate(()=>document.querySelector('#tabN').textContent.trim()!=='٠'&&getComputedStyle(document.querySelector('#tabbar')).display!=='none'),'phone bottom bar shows the cart count');
+ ok(await s.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'store has no sideways scroll');
  // game: title, stories, parent gate
  const g=await pg('game.html');
  await g.click('#tStories');await g.waitForTimeout(400);ok(await g.isVisible('[data-story="worm"]'),'game opens the stories list');
