@@ -1,5 +1,5 @@
 // نبتة: offline cache
-const V='nabta-v44';
+const V='nabta-v45';
 try{importScripts('ga/index.js')}catch(_){self.GA=[]}
 const CORE=['game.html','index.html','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','products.js','phaser.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE).then(()=>c.addAll(self.GA||[]).catch(()=>{}))).then(()=>self.skipWaiting()))});
