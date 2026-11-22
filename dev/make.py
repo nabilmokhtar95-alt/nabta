@@ -36,10 +36,13 @@ tail='''<style>.pwa-inst{position:fixed;left:50%;top:calc(10px + env(safe-area-i
 <script>
 (()=>{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(standalone)return;
- let dp=null;const show=(txt,fn)=>{if(document.querySelector('.pwa-inst'))return;const b=document.createElement('button');b.className='pwa-inst';b.innerHTML='<b>📲</b>'+txt+'<i data-x>✕</i>';
+ let dp=null;const show=(txt,fn)=>{if(document.querySelector('.pwa-inst')||!document.body.classList.contains('ontitle'))return;const b=document.createElement('button');b.className='pwa-inst';b.innerHTML='<b>📲</b>'+txt+'<i data-x>✕</i>';
    b.onclick=e=>{if(e.target.closest('[data-x]')){b.remove();try{localStorage.setItem('nabta-pwa-x','1')}catch(_){}return}fn&&fn(b)};document.body.appendChild(b)};
- try{if(localStorage.getItem('nabta-pwa-x'))return}catch(_){}
- addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;show('نثبّت اللعبة على الموبايل',b=>{dp.prompt();dp.userChoice.finally(()=>b.remove())})});
+ try{if(localStorage.getItem('nabta-pwa-x'))return;const v=+(localStorage.getItem('nabta-visits')||0)+1;localStorage.setItem('nabta-visits',v);if(v<2)return}catch(_){return}
+ const onTitle=()=>document.body.classList.contains('ontitle');
+ const offer=()=>{try{if(localStorage.getItem('nabta-pwa-x'))return}catch(_){}dp&&show('نثبّت اللعبة على الموبايل',b=>{const d=dp;dp=null;d.prompt();d.userChoice.finally(()=>b.remove())})};
+ new MutationObserver(()=>{const b=document.querySelector('.pwa-inst');if(b&&!onTitle())b.remove();else if(!b&&onTitle())offer()}).observe(document.body,{attributes:true,attributeFilter:['class']});
+ addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;offer()});
  if(/iphone|ipad|ipod/i.test(navigator.userAgent))setTimeout(()=>{if(!document.documentElement.classList.contains('boot'))show('للتثبيت: ⬆️ مشاركة ثم «إضافة إلى الشاشة الرئيسية»',b=>b.remove())},6000);
 })();
 </script>

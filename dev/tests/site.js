@@ -7,15 +7,21 @@ const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)process.exitCode=1};
  // store: order form
  const s=await pg('index.html');
  await s.locator('#grid [data-add]').first().click();await s.click('#cartBtn');await s.waitForTimeout(400);
- await s.fill('#oName','تجربة');await s.fill('#oPhone','٠١٠١٢٣');await s.selectOption('#oGov',{index:1});await s.fill('#oAddr','العنوان');
- await s.click('#orderF button[type=submit]');ok(!(await s.evaluate(()=>document.querySelector('#oErr').hidden)),'store rejects a short phone number');
- await s.fill('#oPhone','٠١٠١٢٣٤٥٦٧٨');await s.click('#orderF button[type=submit]');ok((await s.textContent('#oMsg')||'').includes('01012345678'),'store builds the order message with latin digits');
+ ok(!(await s.$('#oPhone'))&&!(await s.$('#oAddr')),'with no prices the cart asks no phone or address');
+ await s.click('#orderF button[type=submit]');ok(!(await s.evaluate(()=>document.querySelector('#oErr').hidden)),'price question needs the governorate');
+ await s.selectOption('#oGov',{index:2});await s.click('#orderF button[type=submit]');const m=await s.textContent('#oMsg')||'';
+ ok(m.includes('السعر والتوفر')&&m.includes('الجيزة'),'cart builds a price & availability question');
+ await s.evaluate(()=>{closeAll&&closeAll()}).catch(()=>{});
  await s.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=700){scrollTo(0,y);await new Promise(r=>setTimeout(r,50))}});await s.waitForTimeout(800);
  ok(await s.evaluate(()=>[...document.images].every(i=>!i.getAttribute('src')||!i.complete||i.naturalWidth>0)),'store images all load');
  ok(await s.evaluate(()=>document.querySelector('#tabN').textContent.trim()!=='٠'&&getComputedStyle(document.querySelector('#tabbar')).display!=='none'),'phone bottom bar shows the cart count');
  ok(await s.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'store has no sideways scroll');
  // game: title, stories, parent gate
  const g=await pg('game.html');
+ await g.click('#tPlay');await g.waitForTimeout(1500);
+ ok(!(await g.evaluate(()=>document.querySelector('#scrim').classList.contains('open'))),'first visit goes straight to playing (no name or gift popup)');
+ ok(!(await g.$('.pwa-inst')),'no install banner during play');
+ await g.evaluate(()=>{location.hash='';location.reload()});await g.waitForTimeout(1500);
  await g.click('#tStories');await g.waitForTimeout(400);ok(await g.isVisible('[data-story="worm"]'),'game opens the stories list');
  await g.click('[data-story="worm"]');await g.waitForTimeout(1500);ok(await g.evaluate(()=>document.querySelector('#stVid').currentTime>0),'story video plays');
  await g.evaluate(()=>document.querySelector('#stVid').dispatchEvent(new Event('ended')));await g.click('[data-sop="0"]');await g.waitForTimeout(2200);

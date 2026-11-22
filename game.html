@@ -590,6 +590,7 @@ button:disabled{cursor:default}
 .tbtns .btn.big{min-width:230px}
 .tbtns .btn.big.red{font-size:32px}
 .tsub{font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.tforage{font-size:13px;font-weight:700;color:#fff;background:rgba(0,0,0,.18);border-radius:99px;padding:2px 12px}
 
 /* ---------- game ---------- */
 #game{position:fixed;inset:0;z-index:46;background:#2f5a2a;display:flex;flex-direction:column}
@@ -1684,6 +1685,7 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
 #pgate .ops button{font-size:26px;font-weight:800;padding:12px 0;border-radius:16px;background:#eef7f0;color:#234;box-shadow:0 4px 0 #cfe3d3}
 #pgate .ops button.no{animation:stShake .4s;background:#ffe3e3}
 #pgate .cx{margin-top:14px;background:transparent;color:#678;font-weight:700}
+.agen{display:block;font-size:13px;font-weight:600;color:#7a6a40;background:#fff6d8;border-radius:12px;padding:6px 10px;margin:6px 0}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0faeb0">
@@ -1845,6 +1847,7 @@ html.boot #title::after{content:"بنجهّز الجنينة… 🌱";position:f
   <div class="brand tlogo" role="img" aria-label="نبتة - Fun Learning Activities"></div>
   <div class="logo">جنينة نبتة</div>
   <div class="tagline">نزرع، نسقي، ونحمي الزرع من الدود!</div>
+  <div class="tforage">لعبة لأطفال من ٣ لـ ٦ سنين</div>
   <canvas id="tCv" width="340" height="400"></canvas>
   <div class="tbtns">
     <button class="btn big red" id="tPlay">▶ يلا نلعب</button>
@@ -3801,7 +3804,7 @@ function renderToys(){
 function openToy(id){const t=TOYM[id];SND.pop();const gs=(TOYGAMES[id]||[]).map(g=>GAMES.find(x=>x.id===g)).filter(Boolean).slice(0,4);
   const got=(S.album||{})[id],w=WORLDS.findIndex((_,i)=>worldToy(i)===id);
   openSheet(t.n,t.en,`<div class="toyd">${toyArt(t,'big')}<div class="chips">${t.age?`<i class="age">${/^من/.test(t.age)?t.age:'سن '+t.age}</i>`:''}${t.sk.map(k=>`<i>${k}</i>`).join('')}</div>${t.d?`<p>${t.d}</p>`:''}
-   ${gs.length?`<div class="tgames"><b>🎮 نتمرّن عليها في نبتة:</b><div class="row" style="justify-content:center">${gs.map(g=>`<button class="btn ghost" data-tg="${g.id}">${g.icon} ${g.name}</button>`).join('')}</div></div>`:''}
+   ${gs.length?`<div class="tgames"><b>🎮 نتمرّن عليها في نبتة:</b>${(TOYCAT[1][2]||[]).includes(id)||/ولادة|شهر|سنة/.test(t.age||'')?'<small class="agen">اللعبة الحقيقية دي للبيبي، والألعاب الرقمية لما يكبر ويبقى عنده ٣ سنين.</small>':''}<div class="row" style="justify-content:center">${gs.map(g=>`<button class="btn ghost" data-tg="${g.id}">${g.icon} ${g.name}</button>`).join('')}</div></div>`:''}
    <div class="how">${got?'🧸 الكارت ده في ألبومنا!':w>=0?'🧸 الكارت ده مستخبي في عالم «'+WORLDS[w].name+'» في المغامرة':''}</div>
    ${IN_STORE?`<button class="btn" data-instore="${id}">🛒 شوفوها في المتجر واطلبوها</button>`:`<p class="how">للسعر والطلب كلّمونا على صفحة نبتة.</p><a class="btn fb" href="https://www.facebook.com/Nabta2022" target="_blank" rel="noopener">اطلبها من صفحة نبتة ↗</a>`}</div>`,e=>{
     const st=e.target.closest('[data-instore]');if(st){closeSheet();toStore('toy',st.dataset.instore);return}
@@ -5690,7 +5693,7 @@ const TKST=[[0,'بذرة','من الولادة','seed'],[1.5,'نبتة صغير�
 let toyAge=null;
 const tkFits=t=>toyAge==null||(tkAge(t)<=toyAge&&!(toyAge>=3&&tkCat(t.id)==='baby'));
 renderToys=function(){
-  const th=document.querySelector('#v-toys .thero');if(th&&!th.dataset.n){th.dataset.n=1;th.className='thero tk-hero';th.innerHTML=`<img class="tk-nab" src="${NP('pose_water')}" alt=""><div><b>كل لعبة بذرة،<br>وطفلك هو اللي بيكبر</b><p>ألعاب حقيقية من نبتة. اللي عليها 🎮 ليها لعبة شبهها هنا في الجنينة.</p></div>`}
+  const th=document.querySelector('#v-toys .thero');if(th&&!th.dataset.n){th.dataset.n=1;th.className='thero tk-hero';th.innerHTML=`<img class="tk-nab" src="${NP('pose_water')}" alt=""><div><b>كل لعبة بذرة،<br>وطفلك هو اللي بيكبر</b><p>ألعاب حقيقية من نبتة من الولادة لحد ٦ سنين. اللي عليها 🎮 ليها لعبة شبهها هنا في الجنينة، وألعاب الجنينة لسن ٣ سنين وأكبر.</p></div>`}
   const al=S.album||{},n=albumN(),cat=TOYCAT.find(c=>c[0]===toyCat)||TOYCAT[0],list=(cat[2]?TOYS.filter(t=>cat[2].includes(t.id)):TOYS).filter(tkFits);
   const pool=TOYS.filter(tkFits),dayT=pool.length?pool[Math.floor(Date.now()/864e5)%pool.length]:TOYS[0];
   const sun=PART&&PART.sunflower;
@@ -5770,9 +5773,11 @@ new MutationObserver(ms=>{if(ms.some(m=>m.target.id==='stage'&&m.addedNodes.leng
 /* =================== TITLE =================== */
 function openTitle(){overlayOn='title';$('#title').hidden=false;naApply($('#tArt'),'pose_wave');document.body.classList.add('ontitle');try{renderKids()}catch(e){}$('#tStars').textContent=totalStars()?'⭐ '+ar(totalStars())+' من '+ar(LEVELS.length*3)+' نجمة':''}
 function closeTitle(tab){audio();SND.pop();$('#title').hidden=true;document.body.classList.remove('ontitle');overlayOn=null;setTab(tab);
-  if(tab==='garden'&&!S.ordIntro){S.ordIntro=1;setTimeout(()=>{say('الزباين بيطلبوا محاصيل! 🐰 نزرع اللي طالبينه ونحصده ونسلّمه، ونكسب عملات كتير 📦',9000);speak('الزباين بيطلبوا محاصيل! نزرع اللي طالبينه ونسلّمه')},1500)}
+  const firstRun=!(S.stats.planted>0);  // first visit: let the child play straight away; name, daily gift and orders come later
+  if(tab==='garden'&&!S.ordIntro&&!firstRun){S.ordIntro=1;setTimeout(()=>{say('الزباين بيطلبوا محاصيل! 🐰 نزرع اللي طالبينه ونحصده ونسلّمه، ونكسب عملات كتير 📦',9000);speak('الزباين بيطلبوا محاصيل! نزرع اللي طالبينه ونسلّمه')},1500)}
   if(tab==='garden')say(S.stats.planted?rnd(['رجعنا للجنينة'+nm()+'! 🌿','الجنينة كانت مستنيانا 🌼','يلا نكمل الزرع'+nm()+'! 🌱']):'أهلاً! أنا نبتة 🌱 لمسة على أي حوض فاضي ونزرع أول بذرة',7000);
   const gift=()=>{if(dailyDue())setTimeout(openDaily,350)};
+  if(firstRun)return;
   if(!S.named)setTimeout(()=>askName(gift),350);else{gift();if(S.name)speak('أهلاً يا '+S.name)}}
 $('#tPlay').onclick=()=>closeTitle('garden');
 $('#tGarden').onclick=()=>closeTitle('map');
@@ -5888,10 +5893,13 @@ window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.ho
 <script>
 (()=>{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(standalone)return;
- let dp=null;const show=(txt,fn)=>{if(document.querySelector('.pwa-inst'))return;const b=document.createElement('button');b.className='pwa-inst';b.innerHTML='<b>📲</b>'+txt+'<i data-x>✕</i>';
+ let dp=null;const show=(txt,fn)=>{if(document.querySelector('.pwa-inst')||!document.body.classList.contains('ontitle'))return;const b=document.createElement('button');b.className='pwa-inst';b.innerHTML='<b>📲</b>'+txt+'<i data-x>✕</i>';
    b.onclick=e=>{if(e.target.closest('[data-x]')){b.remove();try{localStorage.setItem('nabta-pwa-x','1')}catch(_){}return}fn&&fn(b)};document.body.appendChild(b)};
- try{if(localStorage.getItem('nabta-pwa-x'))return}catch(_){}
- addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;show('نثبّت اللعبة على الموبايل',b=>{dp.prompt();dp.userChoice.finally(()=>b.remove())})});
+ try{if(localStorage.getItem('nabta-pwa-x'))return;const v=+(localStorage.getItem('nabta-visits')||0)+1;localStorage.setItem('nabta-visits',v);if(v<2)return}catch(_){return}
+ const onTitle=()=>document.body.classList.contains('ontitle');
+ const offer=()=>{try{if(localStorage.getItem('nabta-pwa-x'))return}catch(_){}dp&&show('نثبّت اللعبة على الموبايل',b=>{const d=dp;dp=null;d.prompt();d.userChoice.finally(()=>b.remove())})};
+ new MutationObserver(()=>{const b=document.querySelector('.pwa-inst');if(b&&!onTitle())b.remove();else if(!b&&onTitle())offer()}).observe(document.body,{attributes:true,attributeFilter:['class']});
+ addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;offer()});
  if(/iphone|ipad|ipod/i.test(navigator.userAgent))setTimeout(()=>{if(!document.documentElement.classList.contains('boot'))show('للتثبيت: ⬆️ مشاركة ثم «إضافة إلى الشاشة الرئيسية»',b=>b.remove())},6000);
 })();
 </script>
