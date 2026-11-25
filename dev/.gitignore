@@ -1,1 +1,7 @@
 out/
+story/a/
+story/fr/
+story/*.wav
+story/env*.json
+story/pv_*.png
+story/*.env.json

@@ -1,0 +1,212 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden;background:#000;font-family:"Noto Kufi Arabic","Noto Sans Arabic","Noto Naskh Arabic",sans-serif}
+#view{position:absolute;inset:0;overflow:hidden}
+#cam{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;will-change:transform}
+#sky{position:absolute;inset:-200px -300px;background:linear-gradient(#69bdf0 0%,#a9defa 50%,#e8f8ff 72%)}
+#night{position:absolute;inset:-200px -300px;background:linear-gradient(#0c1445,#27307a 60%,#4b4a9a);opacity:0}
+#dusk{position:absolute;inset:-200px -300px;background:linear-gradient(transparent 20%,#ff9a5a 62%,#ffd27a 75%);opacity:0}
+#stars{position:absolute;inset:0;opacity:0}#stars i{position:absolute;border-radius:50%;background:#fff}
+#moon{position:absolute;left:400px;top:60px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffef0,#f1e9b4);box-shadow:0 0 60px #fff8c0}
+#dark{position:absolute;inset:-300px -400px;background:#141c5c;mix-blend-mode:multiply;opacity:0;pointer-events:none}
+#sunW{position:absolute;left:960px;top:70px;width:150px;height:150px}
+#rays{position:absolute;inset:-70px;background:repeating-conic-gradient(#fff3a8 0 9deg,transparent 9deg 22.5deg);border-radius:50%;opacity:.55;-webkit-mask:radial-gradient(circle,#000 35%,transparent 70%);mask:radial-gradient(circle,#000 35%,transparent 70%)}
+#sun{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fffbd0,#ffd84a 55%,#ffb300);box-shadow:0 0 70px #ffe27a}
+.cl{position:absolute;height:54px;background:#fff;border-radius:60px;opacity:.96;filter:drop-shadow(0 8px 0 rgba(130,190,230,.25))}
+.cl:before,.cl:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cl:before{width:52%;height:170%;top:-80%;left:14%}.cl:after{width:38%;height:130%;top:-50%;left:52%}
+svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:visible}
+.sp{position:absolute;transform-origin:50% 100%;will-change:transform;user-select:none}
+.sh{position:absolute;height:22px;border-radius:50%;background:rgba(30,70,20,.28);filter:blur(3px)}
+#fx,#fxf{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;will-change:transform}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 62%,rgba(10,50,30,.28));pointer-events:none}
+#sub{position:absolute;left:0;right:0;bottom:44px;text-align:center}
+#sub span{display:inline-block;background:rgba(255,255,255,.96);color:#1f5f2a;font-size:40px;font-weight:800;padding:8px 34px 12px;border-radius:40px;box-shadow:0 6px 0 rgba(31,95,42,.9)}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden}
+#title{background:radial-gradient(circle at 50% 42%,#a8e86e,#3f9a2e 75%)}
+#end{background:radial-gradient(circle at 50% 42%,#ffe08a,#f29a1e 78%)}
+.burst{position:absolute;width:1700px;height:1700px;left:50%;top:46%;margin:-850px;background:repeating-conic-gradient(rgba(255,255,255,.14) 0 10deg,transparent 10deg 20deg);border-radius:50%}
+.t1{position:relative;font-size:84px;font-weight:900;line-height:1.3;text-shadow:0 7px 0 rgba(0,0,0,.2)}
+.t2{position:relative;font-size:34px;font-weight:700;margin-top:10px;background:rgba(0,0,0,.18);padding:4px 26px 8px;border-radius:30px}
+.tc{position:absolute;bottom:-10px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#dark{background:#4d5966!important}
+#rain{position:absolute;left:0;top:0;width:1280px;height:720px;pointer-events:none}
+#tub{position:absolute;width:240px;height:120px;left:0;top:0;transform-origin:50% 100%}
+#umb{position:absolute;width:260px;height:120px;transform-origin:50% 100%}
+</style></head><body>
+<div id="view">
+ <div id="cam">
+  <div id="sky"></div><div id="night"></div><div id="dusk"></div><div id="stars"></div><div id="moon"></div>
+  <div id="sunW"><div id="rays"></div><div id="sun"></div></div>
+  <div class="cl" id="c1" style="width:210px;top:120px"></div><div class="cl" id="c2" style="width:150px;top:210px"></div><div class="cl" id="c3" style="width:120px;top:80px"></div>
+  <svg class="L" id="rbow" viewBox="-300 0 1880 720"><g id="rbg" fill="none" stroke-width="22" stroke-linecap="round"></g></svg>
+  <svg class="L" id="far" viewBox="-300 0 1880 720"><path d="M-300 470 Q-50 360 200 440 T700 420 T1200 400 T1580 440 V720 H-300Z" fill="#a9df86"/>
+   <g fill="#8fd16a"><circle cx="90" cy="405" r="34"/><circle cx="130" cy="390" r="44"/><circle cx="175" cy="408" r="32"/><circle cx="1010" cy="380" r="40"/><circle cx="1060" cy="368" r="52"/><circle cx="1112" cy="386" r="36"/></g></svg>
+  <svg class="L" id="mid" viewBox="-300 0 1880 720"><path d="M-300 520 Q0 440 300 500 T900 480 T1580 500 V720 H-300Z" fill="#7cc75a"/>
+   <g id="trees"></g><g id="fence"></g></svg>
+  <svg class="L" id="gnd" viewBox="-300 0 1880 720"><path d="M-300 560 H1580 V720 H-300Z" fill="#5fae40"/><path d="M-300 640 Q300 618 640 636 T1580 628 V720 H-300Z" fill="#4c9a33"/>
+   <g id="tufts"></g><g id="flw"></g>
+   <ellipse cx="640" cy="606" rx="120" ry="26" fill="#6b4226"/><ellipse cx="640" cy="598" rx="104" ry="20" fill="#8a5a35"/></svg>
+  <div id="shadows"></div>
+  <div id="fx"></div>
+  <svg class="L" id="pud" viewBox="-300 0 1880 720"></svg><img class="sp" id="bun" src="a/ZART_frog_idle.webp"><div id="tub"></div>
+  <img class="sp" id="plant" src="a/PART_tulip_sprout.webp">
+  <img class="sp" id="worm" src="a/ZART_chick_idle.webp">
+  <img class="sp" id="nab" src="a/NART_pose_run.webp"><div id="umb"></div>
+  <img class="sp" id="bf1" src="a/ZART_butterfly_idle.webp"><img class="sp" id="bf2" src="a/ZART_butterfly_happy.webp">
+  <div id="dark"></div><div id="fxf"></div><canvas id="rain" width="1280" height="720"></canvas>
+  <svg class="L" id="fg" viewBox="-300 0 1880 720"><g id="fgt"></g></svg>
+ </div>
+ <div id="vig"></div><div id="flash"></div>
+ <div id="sub"></div>
+ <div class="card" id="title"><div class="burst" id="tb"></div><div class="t1" id="tt">نبتة وكتكوت والمطرة</div><div class="t2" id="ts">حكايات جنينة نبتة · الحلقة التانية</div>
+  <img class="tc" id="tn" src="a/NART_pose_wave.webp" style="height:300px;right:90px"><img class="tc" id="tw" src="a/ZART_chick_happy.webp" style="height:170px;left:120px"></div>
+ <div class="card" id="end"><div class="burst" id="eb"></div><div class="t1">لعبنا في المطرة… واستحمّينا!</div><div class="t2">بعد اللعب في الطين، نغسل ونستحمى</div>
+  <img class="tc" id="en" src="a/NART_pose_cheer.webp" style="height:300px;right:100px"><img class="tc" id="ebn" src="a/ZART_chick_happy.webp" style="height:180px;left:300px"><img class="tc" id="ew" src="a/ZART_frog_happy.webp" style="height:170px;left:70px"></div>
+</div>
+<script>
+const ENV=window.__ENV||[];
+const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const cl=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,k)=>a+(b-a)*k;
+const eio=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,eout=k=>1-Math.pow(1-k,3),eback=k=>{const c=1.70158;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+const seg=(t,a,b,e=eio)=>e(cl((t-a)/(b-a),0,1));
+// keyframes: [[time,value],...] with easing between
+function kf(t,K,e=eio){if(t<=K[0][0])return K[0][1];for(let i=1;i<K.length;i++){if(t<=K[i][0])return lerp(K[i-1][1],K[i][1],e((t-K[i-1][0])/(K[i][0]-K[i-1][0])))}return K[K.length-1][1]}
+const hop=(t,a,d,h)=>t>=a&&t<a+d?Math.sin((t-a)/d*Math.PI)*h:0;
+// squash on landing at time a
+const land=(t,a)=>t>=a&&t<a+.28?Math.sin((t-a)/.28*Math.PI):0;
+// static scenery
+{const tr=$('trees');[[-180,470,1],[330,468,.8],[820,455,.9],[1380,470,1.1]].forEach(([x,y,s])=>{tr.insertAdjacentHTML('beforeend',`<g transform="translate(${x} ${y}) scale(${s})"><rect x="-9" y="0" width="18" height="60" rx="8" fill="#8a5a35"/><circle cx="0" cy="-30" r="52" fill="#4fa63a"/><circle cx="-34" cy="-6" r="34" fill="#5cb445"/><circle cx="36" cy="-8" r="36" fill="#449a32"/><circle cx="14" cy="-48" r="14" fill="#7cd35c" opacity=".7"/></g>`)});
+ const fe=$('fence');let h='';for(let x=-300;x<1580;x+=46)h+=`<rect x="${x}" y="500" width="16" height="62" rx="7" fill="#fff6e3"/>`;h+=`<rect x="-300" y="516" width="1880" height="9" fill="#f3e3c2"/><rect x="-300" y="540" width="1880" height="9" fill="#f3e3c2"/>`;fe.innerHTML=h;
+ let tf='';for(let i=0;i<70;i++){const x=-300+i*27+Math.sin(i*3)*8,hh=10+(i*7)%14;tf+=`<path d="M${x} 562 q4 -${hh} 8 0 q4 -${hh+6} 8 0" fill="#4c9a33"/>`}$('tufts').innerHTML=tf;
+ let fl='';[[60,660,'#ff7fb0'],[210,690,'#ffd23f'],[420,668,'#fff'],[860,676,'#ff7fb0'],[1010,694,'#ffd23f'],[1190,664,'#fff'],[-120,680,'#ffd23f'],[1350,690,'#ff7fb0']].forEach(([x,y,c],i)=>{fl+=`<g class="fw" data-i="${i}" transform="translate(${x} ${y})"><rect x="-2" y="0" width="4" height="26" fill="#3f8a2b"/>${[0,72,144,216,288].map(a=>`<circle cx="${Math.cos(a*Math.PI/180)*9}" cy="${Math.sin(a*Math.PI/180)*9}" r="8" fill="${c}"/>`).join('')}<circle r="6" fill="#ffb300"/></g>`});$('flw').innerHTML=fl;
+ let fg='';for(let i=0;i<40;i++){const x=-300+i*48+Math.sin(i*5)*12,hh=34+(i*13)%30;fg+=`<path d="M${x} 730 q10 -${hh} 16 -${hh+20} q4 ${hh} 10 ${hh+20}Z" fill="#3f8a2b"/>`}$('fgt').innerHTML=fg}
+const SUBS=[[4.6,6.2,'أهلاً! أنا نبتة'],[13.3,15.8,'الدنيا بتمطر… نلبس إيه؟'],[20.6,23.1,'شربت! هتكبر دلوقتي'],[25.6,29.6,'بنشوف قوس قزح بـ إيه؟'],[29.8,30.8,'تحفة!'],[31.6,34.1,'كتكوت متوسخ! نحمّيه'],[40.2,41.8,'بقى نضيف خالص!'],[42.2,43.8,'كتكوت مبسوط'],[44.6,45.7,'برافو!']];
+function put(el,cx,foot,h,o={}){const s=el.style;s.height=h+'px';s.left=cx+'px';s.top=(foot-h)+'px';s.opacity=o.op==null?1:o.op;
+  s.transform=`translate(-50%,0) rotate(${o.rot||0}deg) scale(${(o.flip?-1:1)*(o.sx||1)},${o.sy||1})`}
+function src(el,n){const u='a/'+n+'.webp';if(el.getAttribute('src')!==u)el.setAttribute('src',u)}
+{let h='';for(let i=0;i<70;i++){const x=(i*173)%1280,y=(i*97)%330,r=1+(i%3);h+=`<i data-i="${i}" style="left:${x}px;top:${y}px;width:${r*2}px;height:${r*2}px"></i>`}$('stars').innerHTML=h}
+// rainbow arcs, puddles, bath tub, leaf umbrella
+{const C=['#ff5a5a','#ff9a3c','#ffd23f','#5fd35b','#39a9ff','#7b6cff'];$('rbg').innerHTML=C.map((c,i)=>`<path id="rb${i}" d="M ${300+i*22} 600 A ${420-i*22} ${400-i*22} 0 0 1 ${1140-i*22} 600" stroke="${c}" opacity=".85"/>`).join('');
+ $('pud').innerHTML=[[200,616,110],[1010,618,130]].map(([x,y,w],i)=>`<g id="pd${i}"><ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w*.2}" fill="#6f5b45"/><ellipse cx="${x}" cy="${y-2}" rx="${w*.86}" ry="${w*.15}" fill="#8fc3e8"/><ellipse cx="${x-w*.3}" cy="${y-5}" rx="${w*.25}" ry="${w*.04}" fill="#d8efff"/></g>`).join('');
+ $('tub').innerHTML=`<svg viewBox="0 0 240 120" width="240" height="120"><path d="M10 34 H230 Q226 104 190 110 H50 Q14 104 10 34Z" fill="#f5fbff" stroke="#9cc8e6" stroke-width="5"/><rect x="0" y="22" width="240" height="18" rx="9" fill="#d6ecfb" stroke="#9cc8e6" stroke-width="4"/><rect x="48" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><rect x="178" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><ellipse cx="120" cy="30" rx="108" ry="8" fill="#8fd0ff"/></svg>`;
+ $('umb').innerHTML=`<svg viewBox="0 0 260 120" width="260" height="120"><path d="M10 92 Q40 4 130 4 Q220 4 250 92 Q220 78 190 92 Q160 78 130 92 Q100 78 70 92 Q40 78 10 92Z" fill="#4fae3a" stroke="#2f7d25" stroke-width="4"/><path d="M130 6 V92 M130 40 L60 80 M130 40 L200 80" stroke="#2f7d25" stroke-width="4" fill="none" opacity=".6"/><path d="M130 92 V118" stroke="#6b4226" stroke-width="7" stroke-linecap="round"/></svg>`}
+const rc=$('rain').getContext('2d');
+const SPL=[17.2,18.4,19.6],END=48.2,PX=200,FX=1010,TX=320;
+window.setT=function(t){
+  const f=Math.round(t*30),talk=ENV[f]||0,mouth=((ENV[f-1]||0)+talk+(ENV[f+1]||0))/3>.28;
+  // ---------- cards ----------
+  const tOut=seg(t,2.5,3.1);$('title').style.transform=`translateY(${-tOut*760}px)`;$('title').style.display=t<3.2?'flex':'none';
+  $('tb').style.transform=`rotate(${t*14}deg)`;$('tt').style.transform=`scale(${seg(t,.15,.8,eback)})`;$('ts').style.transform=`scale(${seg(t,.6,1.1,eback)})`;
+  $('tn').style.transform=`translateY(${(1-seg(t,.5,1.1,eback))*340-Math.abs(Math.sin(t*5))*14}px)`;$('tw').style.transform=`translateY(${(1-seg(t,.9,1.5,eback))*260-Math.abs(Math.sin(t*6))*20}px)`;
+  const eIn=seg(t,END,END+.7,eout);$('end').style.transform=`translateY(${(1-eIn)*760}px)`;$('end').style.display=t>END-.1?'flex':'none';
+  $('eb').style.transform=`rotate(${t*14}deg)`;$('en').style.transform=`translateY(${-Math.abs(Math.sin(t*6))*26}px)`;$('ebn').style.transform=`translateY(${-Math.abs(Math.sin(t*6+1))*20}px)`;$('ew').style.transform=`translateY(${-Math.abs(Math.sin(t*6+2))*24}px)`;
+  // ---------- weather ----------
+  const storm=kf(t,[[11.2,0],[12.6,1],[23,1],[24.6,0]]),rain=kf(t,[[12.8,0],[13.4,1],[22.8,1],[23.5,0]]),rb=seg(t,24.4,26.2,eout)*(1-seg(t,46.5,47.5));
+  $('dark').style.opacity=storm*.45;$('stars').style.opacity=0;$('moon').style.opacity=0;$('night').style.opacity=0;$('dusk').style.opacity=0;
+  $('sky').style.filter=`saturate(${1-storm*.6}) brightness(${1-storm*.25})`;
+  $('sunW').style.transform=`translate(0,${storm*160}px)`;$('sunW').style.opacity=1-storm;
+  $('rays').style.transform=`rotate(${t*10}deg)`;
+  // storm clouds slide in over the sun
+  const cg=kf(t,[[11,0],[12.6,1],[23,1],[24.6,0]]);
+  $('c1').style.left=lerp(60+t*7,700,cg)+'px';$('c2').style.left=lerp(520-t*5,930,cg)+'px';$('c3').style.left=lerp(760+t*3,1040,cg)+'px';
+  for(const c of ['c1','c2','c3']){$(c).style.filter=`brightness(${1-cg*.35})`;$(c).style.transform=`scale(${1+cg*.9})`}
+  $('rbow').style.opacity=rb;['rb0','rb1','rb2','rb3','rb4','rb5'].forEach((id,i)=>{const e=$(id),L=e.getTotalLength();e.style.strokeDasharray=L;e.style.strokeDashoffset=L*(1-seg(t,24.4+i*.12,25.9+i*.12,eout))});
+  // puddles grow with the rain
+  ['pd0','pd1'].forEach(id=>{const k=kf(t,[[13,0],[16,1]]);$(id).setAttribute('transform',`translate(${id==='pd0'?PX:FX} 616) scale(${k} ${k}) translate(${-(id==='pd0'?PX:FX)} -616)`);$(id).style.opacity=k?1:0});
+  // ---------- camera ----------
+  const CAM=[[3,1.12,560,380],[6.4,1,640,360],[11,1,640,360],[12.4,1.02,640,340],[16.4,1.02,640,340],[17,1.35,420,470],[20.2,1.35,420,470],[20.6,1.3,680,450],[23.2,1.3,680,450],[24.2,1,640,330],[30.9,1,640,330],[31.6,1.3,330,450],[34.2,1.3,330,450],[35,1.35,450,450],[39.6,1.35,450,450],[40.2,1.45,360,460],[42,1.45,360,460],[43.4,1.15,560,410],[44,1.15,560,410],[44.6,1.08,600,380],[48,1.1,600,380]];
+  const z=kf(t,CAM.map(c=>[c[0],c[1]])),cx=kf(t,CAM.map(c=>[c[0],c[2]])),cy=kf(t,CAM.map(c=>[c[0],c[3]]));
+  let shx=0,shy=0;if(t>=12.2&&t<12.9){const k=1-(t-12.2)/.7;shx=Math.sin(t*80)*10*k;shy=Math.cos(t*60)*8*k}
+  const fxw=cl(cx,640/z,1280-640/z),fyw=cl(cy,360/z,720-360/z);
+  $('cam').style.transform=`translate(${640-fxw*z+shx}px,${360-fyw*z+shy}px) scale(${z})`;
+  $('far').style.transform=`translateX(${(fxw-640)*.35}px)`;$('mid').style.transform=`translateX(${(fxw-640)*.18}px)`;$('fg').style.transform=`translateX(${-(fxw-640)*.5}px) translateY(${(z-1)*40}px)`;
+  document.querySelectorAll('.fw').forEach(g=>{const i=+g.dataset.i,b=g.getAttribute('data-b')||g.getAttribute('transform');g.setAttribute('data-b',b);g.setAttribute('transform',b+` rotate(${Math.sin(t*2+i)*(6+storm*10)})`)});
+  // ---------- Nabta ----------
+  let nx=820,ny=600,nh=290,pose='NART_front',rot=0,sx=1,sy=1,umb=0;
+  const say=(open,shut='NART_front')=>mouth?open:shut;
+  if(t<4.5){pose='NART_pose_run';nx=lerp(-160,820,seg(t,3.1,4.5,eout));ny=600-Math.abs(Math.sin(t*16))*14;rot=6}
+  else if(t<6.6){pose='NART_pose_wave';rot=Math.sin(t*7)*3}
+  else if(t<11.2){pose=Math.floor(t*2.4)%2?'NART_pose_jump':'NART_pose_cheer';nx=820+Math.sin((t-6.6)*1.3)*60;ny=600-Math.abs(Math.sin((t-6.6)*4.4))*60}
+  else if(t<13.2){pose='NART_face_surprised';ny=600-hop(t,12.25,.35,50)}
+  else if(t<15.9){pose=say('NART_face_surprised','NART_face_think');rot=Math.sin(t*4)*2}
+  else if(t<20.4){pose='NART_face_happy';umb=seg(t,15.9,16.4,eback);ny=600-hop(t,16,.4,30);nx=820}
+  else if(t<23.3){pose=say('NART_face_happy');umb=1;nx=lerp(820,780,seg(t,20.4,21))}
+  else if(t<24.4){pose='NART_face_happy';umb=1-seg(t,23.3,23.8);nx=780}
+  else if(t<31.1){pose=t<25.5?'NART_pose_cheer':say('NART_face_surprised','NART_face_think');nx=780;ny=600-hop(t,24.5,.45,60);if(t>27.6&&t<29.7)pose='NART_face_think';if(t>29.7)pose='NART_pose_cheer'}
+  else if(t<34.3){pose=say('NART_face_surprised');nx=lerp(780,420,seg(t,31.1,31.9));ny=600-hop(t,31.2,.3,40)}
+  else if(t<35.2){pose='NART_pose_walk';nx=lerp(420,570,seg(t,34.3,35.1));ny=600-Math.abs(Math.sin(t*14))*8}
+  else if(t<39.8){pose='NART_pose_water';nx=570;rot=-10+Math.sin(t*6)*4}
+  else if(t<44.4){pose=say('NART_face_happy');nx=lerp(570,840,seg(t,41.9,43.2));ny=600-hop(t,39.9,.4,40)}
+  else{pose=Math.floor(t*2.5)%2?'NART_pose_dance':'NART_pose_cheer';nx=840;ny=600-Math.abs(Math.sin(t*6))*34;rot=Math.sin(t*6)*4}
+  sy*=1+talk*.06;sx*=1-talk*.025;rot+=talk*Math.sin(t*22)*2;
+  src($('nab'),pose);put($('nab'),nx,ny,nh,{rot,sx,sy});
+  const U=$('umb');U.style.opacity=umb;U.style.left=(nx-130)+'px';U.style.top=(ny-nh-98)+'px';U.style.transform=`scale(${umb}) rotate(${Math.sin(t*2)*4}deg)`;
+  // ---------- chick ----------
+  let cs='ZART_chick_idle',cxp=-120,cyp=600,ch=165,crot=0,csx=1,csy=1,cop=1,cflip=false;
+  if(t<6.6)cop=0;
+  else if(t<11.2){cs=Math.floor(t*2.4+1)%2?'ZART_chick_happy':'ZART_chick_idle';cxp=t<7.6?lerp(-120,560,seg(t,6.6,7.6,eout)):560+Math.sin((t-7.6)*1.3+1)*70;cyp=600-Math.abs(Math.sin((t-6.6)*4.4+1))*70}
+  else if(t<16.4){cs='ZART_chick_idle';cxp=560;crot=t<13?Math.sin(t*30)*4:0;cyp=600-hop(t,12.25,.3,40)}
+  else if(t<20.6){cs=t>=SPL[1]?'ZART_chick_dirty':'ZART_chick_happy';cxp=kf(t,[[16.4,560],[17.2,PX]]);
+    cyp=600-hop(t,16.6,.6,80)-hop(t,17.8,.6,90)-hop(t,19,.6,90);SPL.forEach(a=>{const l=land(t,a);if(l){csy=1-l*.3;csx=1+l*.25}})}
+  else if(t<35.2){cs='ZART_chick_dirty';cxp=PX+(t>20.6&&t<23?Math.sin(t*3)*20:0);cyp=600-(t>24.5&&t<26?hop(t,24.6,.4,40):0);if(t>31.4&&t<32.2)crot=Math.sin(t*30)*6}
+  else if(t<35.6){cs='ZART_chick_dirty';const k=seg(t,35.2,35.6);cxp=lerp(PX,TX,k);cyp=600-Math.sin(k*Math.PI)*110-k*36}
+  else if(t<39.8){cs=t<37.5?'ZART_chick_dirty':'ZART_chick_happy';cxp=TX+Math.sin(t*5)*8;cyp=574+Math.sin(t*7)*4;crot=Math.sin(t*5)*6;ch=150}
+  else if(t<40.3){cs='ZART_chick_happy';const k=seg(t,39.8,40.3);cxp=lerp(TX,TX-20,k);cyp=574-Math.sin(k*Math.PI)*120+k*26}
+  else{cs='ZART_chick_happy';cxp=TX-20;cyp=600-Math.abs(Math.sin(t*6+1))*36;crot=Math.sin(t*6)*5}
+  src($('worm'),cs);put($('worm'),cxp,cyp,ch,{rot:crot,sx:csx,sy:csy,op:cop});
+  // ---------- frog ----------
+  let fs='ZART_frog_idle',fxp=FX,fyp=640,fh=150,fop=0,frot=0;
+  if(t>=17.6&&t<23.4){fop=1;fs=Math.floor(t*2)%2?'ZART_frog_happy':'ZART_frog_idle';fyp=lerp(680,612,seg(t,17.6,18.1,eback))-(t>18.3?Math.abs(Math.sin((t-18.3)*4))*60:0)}
+  else if(t>=23.4&&t<44.4){fop=1;fs='ZART_frog_idle';fyp=612;if(t>40.2&&t<44)fs='ZART_frog_happy'}
+  else if(t>=44.4){fop=1;fs='ZART_frog_happy';fyp=612-Math.abs(Math.sin(t*6+2))*40}
+  src($('bun'),fs);put($('bun'),fxp,fyp,fh,{op:fop,rot:frot});
+  // ---------- tulip ----------
+  let ps='PART_tulip_sprout',ph=120,psx=1,psy=1,prot=Math.sin(t*2)*1.5+storm*Math.sin(t*5)*4;
+  if(t>=20.8){ps='PART_tulip_grow';ph=230;psx=psy=.55+.45*seg(t,20.8,21.8,eout)}
+  if(t>=44.4){ps='PART_tulip_ready';ph=280;psx=psy=.6+.4*seg(t,44.4,45,eback)}
+  src($('plant'),ps);put($('plant'),640,604,ph,{sx:psx,sy:psy,rot:prot});
+  // ---------- tub ----------
+  const tin=seg(t,34.4,35.1,eback)*(1-seg(t,41,41.6));const T=$('tub');T.style.left=(TX-120)+'px';T.style.top=(600-112)+'px';T.style.opacity=tin>0?1:0;T.style.transform=`scale(${tin})`;
+  // ---------- butterflies (only in the sun) ----------
+  put($('bf1'),kf(t,[[3,1400],[7,980],[11,500],[12.4,-200],[25,-200],[28,520],[48,560]]),250+Math.sin(t*2.2)*40+Math.sin(t*9)*6,70,{sx:1+Math.sin(t*26)*.12,rot:Math.sin(t*3)*8});
+  put($('bf2'),kf(t,[[24.5,1500],[28,780],[48,760]]),300+Math.sin(t*2.6+1)*36,64,{sx:1+Math.sin(t*28)*.12,rot:Math.sin(t*3+2)*8,op:t>24.4?1:0});
+  // ---------- shadows ----------
+  const shd=(x,w,air,op=1)=>`<div class="sh" style="left:${x-w/2}px;top:592px;width:${w}px;opacity:${cl(1-air/260,.25,1)*op};transform:scale(${cl(1-air/400,.5,1)})"></div>`;
+  $('shadows').innerHTML=shd(nx,170,600-ny)+(cop&&!(t>=35.2&&t<40.3)?shd(cxp,110,600-cyp):'');
+  // ---------- particles ----------
+  let fx='',ff='';
+  const P=(x,y,s,html,op=1,rot=0)=>`<div class="p" style="left:${x}px;top:${y}px;opacity:${op};transform:translate(-50%,-50%) scale(${s}) rotate(${rot}deg);font-size:40px">${html}</div>`;
+  const dot=(x,y,r,c,op=1)=>`<div class="p" style="left:${x-r}px;top:${y-r}px;width:${r*2}px;height:${r*2}px;border-radius:50%;background:${c};opacity:${op}"></div>`;
+  const bub=(x,y,html,s=1)=>`<div class="p" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) scale(${s});background:#fff;border-radius:50%;width:96px;height:84px;display:grid;place-items:center;font-size:46px;box-shadow:0 5px 0 rgba(0,0,0,.12)">${html}</div>`+dot(x+12,y+56,9,'#fff')+dot(x+18,y+74,5,'#fff');
+  if(t>3.1&&t<4.7)for(let i=0;i<5;i++){const k=((t*3+i/5)%1);ff+=dot(nx-70-k*60,596-k*26,8+k*10,'#fff',(1-k)*.6)}
+  // lightning flash
+  // mud splashes
+  SPL.forEach(a=>{if(t>=a&&t<a+.6){const k=(t-a)/.6;for(let i=0;i<10;i++){const an=Math.PI+i/9*Math.PI;ff+=dot(PX+Math.cos(an)*110*eout(k),600+Math.sin(an)*90*eout(k)+k*k*60,9*(1-k)+3,i%2?'#8a6a4a':'#9cd2f5',1-k)}}});
+  if(t>=17.7&&t<18.3){const k=(t-17.7)/.6;for(let i=0;i<8;i++){const an=Math.PI+i/7*Math.PI;ff+=dot(FX+Math.cos(an)*90*eout(k),606+Math.sin(an)*70*eout(k),7*(1-k)+2,'#9cd2f5',1-k)}}
+  // rain drops on the tulip, then growth sparkles
+  for(const a of [20.8,44.4]){if(t>=a&&t<a+1){const k=(t-a),n=a>40?12:7,R=a>40?150:90;for(let i=0;i<n;i++){const an=i/n*Math.PI*2+a;ff+=P(640+Math.cos(an)*R*eout(k),500+Math.sin(an)*R*.8*eout(k),1.1*(1-k)+.2,'✨',1-k)}}}
+  // rainbow question: eyes bubble while kids answer
+  if(t>=27.6&&t<29.8)fx+=bub(nx+80,ny-340+Math.sin(t*4)*4,'👀',seg(t,27.6,28,eback));
+  if(t>=31.4&&t<32.6)ff+=P(nx+70,ny-300,1+Math.sin(t*30)*.1,'❗');
+  // bath: bubbles and water from Nabta's can
+  if(t>=35.6&&t<39.8){for(let i=0;i<9;i++){const k=((t-35.6)*.7+i/9)%1;ff+=`<div class="p" style="left:${TX-90+((i*53)%180)+Math.sin(t*3+i)*10}px;top:${480-k*170}px;width:${18+(i%3)*10}px;height:${18+(i%3)*10}px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:radial-gradient(circle at 30% 30%,#fff,rgba(190,230,255,.35));opacity:${1-k}"></div>`}
+    for(let i=0;i<8;i++){const k=((t-35.6)*1.8+i/8)%1;ff+=dot(lerp(nx-90,TX+20,k)+Math.sin(i*7)*8,lerp(ny-150,520,k*k),5,'#39a9ff',1-k*.3)}
+    for(let i=0;i<5;i++)ff+=`<div class="p" style="left:${TX-80+i*38}px;top:${470+Math.sin(t*4+i)*6}px;width:${50+(i%2)*16}px;height:${36+(i%2)*10}px;border-radius:50%;background:#fff;opacity:.95"></div>`}
+  if(t>=39.8&&t<40.8){const k=(t-39.8);for(let i=0;i<10;i++){const an=i/10*Math.PI*2;ff+=P(TX+Math.cos(an)*110*eout(k),470+Math.sin(an)*90*eout(k),1-k*.6,'✨',1-k)}}
+  if(t>=42.2&&t<END)for(let i=0;i<3;i++){const k=((t-42.2)*.8+i/3)%1;ff+=P(cxp+Math.sin(i*9+k*4)*36,cyp-170-k*110,.7+k*.4,'💛',1-k)}
+  if(t>=44.6&&t<END+.5){const cols=['#ff5a7a','#ffd23f','#4fd36a','#39a9ff','#b884f0','#ff9a3c'];for(let i=0;i<60;i++){const s0=(i*97)%1280,sp=160+(i*53)%200,y=-40+((t-44.6)*sp+(i*131)%700)%800,x=s0+Math.sin(t*3+i)*30;ff+=`<div class="p" style="left:${x}px;top:${y}px;width:12px;height:16px;border-radius:3px;background:${cols[i%6]};transform:rotate(${t*200+i*40}deg)"></div>`}}
+  $('fx').innerHTML=fx;$('fxf').innerHTML=ff;
+  $('flash').style.opacity=t>=12.2&&t<12.5?(1-(t-12.2)/.3)*.8:(t>=14.6&&t<14.8?(1-(t-14.6)/.2)*.5:(t>=44.4&&t<44.7?(1-(t-44.4)/.3)*.4:0));
+  // rain (drawn on a canvas in screen space)
+  rc.clearRect(0,0,1280,720);if(rain>0){rc.strokeStyle=`rgba(220,235,255,${.75*rain})`;rc.lineWidth=2.4;rc.beginPath();
+    for(let i=0;i<160;i++){const x=((i*157.3+t*120)%1380)-50,y=((i*91.7+t*900)%800)-60;rc.moveTo(x,y);rc.lineTo(x-7,y+26)}rc.stroke();
+    rc.fillStyle=`rgba(230,242,255,${.6*rain})`;for(let i=0;i<24;i++){const k=((t*2.2+i/24)%1),x=(i*211)%1280,y=640+((i*37)%70);rc.beginPath();rc.ellipse(x,y,4+k*14,2+k*4,0,0,Math.PI*2);rc.globalAlpha=(1-k)*rain;rc.fill()}rc.globalAlpha=1}
+  const s=SUBS.find(s=>t>=s[0]&&t<s[1]);$('sub').innerHTML=s&&t>3.2&&t<END?`<span style="transform:scale(${.85+.15*seg(t,s[0],s[0]+.2,eback)})">${s[2]}</span>`:'';
+};
+setT(0);
+
+</script></body></html>

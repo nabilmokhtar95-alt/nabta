@@ -23,6 +23,7 @@ const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)process.exitCode=1};
  ok(!(await g.$('.pwa-inst')),'no install banner during play');
  await g.evaluate(()=>{location.hash='';location.reload()});await g.waitForTimeout(1500);
  await g.click('#tStories');await g.waitForTimeout(400);ok(await g.isVisible('[data-story="worm"]'),'game opens the stories list');
+ ok(await g.isVisible('[data-story="rain"]'),'episode 2 is in the stories list');
  await g.click('[data-story="worm"]');await g.waitForTimeout(1500);ok(await g.evaluate(()=>document.querySelector('#stVid').currentTime>0),'story video plays');
  await g.evaluate(()=>document.querySelector('#stVid').dispatchEvent(new Event('ended')));await g.click('[data-sop="0"]');await g.waitForTimeout(2200);
  ok(await g.evaluate(()=>!document.querySelector('#storyV').classList.contains('on')),'right answer closes the story');
