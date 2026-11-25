@@ -1,13 +1,13 @@
 # builds audio.wav (voice + original synthesized music + sfx) and env.json (voice loudness per frame: drives the talking mouth)
 import numpy as np,subprocess,json,wave,os
 OUT=os.path.join(os.path.dirname(os.path.abspath(__file__)),'ep2')
-SR=44100;DUR=51.5;FPS=30;V='/home/user/nabta/voice/'
-VO=[(4.6,'011',1.6),(13.3,'067',0),(20.6,'053',0),(25.6,'062',0),(29.8,'003',0),(31.6,'058',0),(40.2,'101',0),(42.2,'095',0),(44.6,'001',0)]
+SR=44100;DUR=45.2;FPS=30;V='/home/user/nabta/voice/'
+VO=[(4.6,'011',1.6),(7.2,'052',0),(19.0,'053',0),(23.2,'003',0),(25.6,'058',0),(34.0,'101',0),(36.0,'095',0),(38.4,'001',0)]
 def load(n,cut):
     a=['ffmpeg','-v','error','-i',V+n+'.mp3']+(['-t',str(cut)] if cut else [])+['-f','f32le','-ac','1','-ar',str(SR),'-']
     x=np.frombuffer(subprocess.run(a,capture_output=True).stdout,dtype=np.float32).copy()
     f=int(.06*SR);x[-f:]*=np.linspace(1,0,f);return x/max(1e-6,np.abs(x).max())*.9
-N=int(DUR*SR);voice=np.zeros(N);music=np.zeros(N);sfx=np.zeros(N)
+N=int(DUR*SR);voice=np.zeros(N);music=np.zeros(N);sfx=np.zeros(N);rain_=np.zeros(N);SPL=[15.4,16.5]
 def put(buf,t,x,g=1.0):
     i=int(t*SR);x=x[:max(0,N-i)];buf[i:i+len(x)]+=x*g
 env=np.zeros(int(DUR*FPS)+2)
@@ -54,15 +54,16 @@ def bath(t0,t1):    # bubbly music box
         if i%4==0:put(music,t,mar(fq('C3'),.7),.5)
         if i%4==2:put(music,t,mar(fq('G3'),.7),.5)
         t+=.25;i+=1
-sectA(0.2,11.2)
-put(music,11.3,pad(fq('A2'),1.6),.35);put(music,11.3,pad(fq('E3'),1.6),.25)
-rainm(12.9,23.3)
-for k,n in enumerate('C5 E5 G5 C6 E6'.split()):put(music,24.4+k*.16,box(fq(n),1.6),.4)
-sectA(26.2,31.3,.8)
-bath(34.6,40)
-sectA(40.2,47.6,1.1,.22)
-for n in ('C4','E4','G4','C5'):put(music,48.0,pad(fq(n),3.4),.16)
-for k,n in enumerate('C5 E5 G5 C6 E6'.split()):put(music,48.2+k*.18,box(fq(n),2),.3)
+sectA(0.2,6.9)
+for n in ('A2','E3','C4'):put(music,7.0,pad(fq(n),3.0),.25)                      # thirsty: soft minor chord
+for n in ('F2','C3','A3'):put(music,9.6,pad(fq(n),1.8),.2)
+rainm(11.4,18.6)
+for k,n in enumerate('C5 E5 G5 C6 E6'.split()):put(music,19.3+k*.16,box(fq(n),1.6),.35)
+sectA(21.6,28.2,.8)
+bath(28.4,33.6)
+sectA(33.8,41.4,1.05,.22)
+for n in ('C4','E4','G4','C5'):put(music,41.8,pad(fq(n),3.2),.16)
+for k,n in enumerate('C5 E5 G5 C6 E6'.split()):put(music,42.0+k*.18,box(fq(n),2),.3)
 def sweep(f0,f1,d,g=1):t=tt(d);f=f0*(f1/f0)**(t/d);ph=2*np.pi*np.cumsum(f)/SR;return g*np.sin(ph)*np.minimum(1,t/.01)*np.minimum(1,(d-t)/.05)
 rng=np.random.default_rng(3)
 def noise(d,g=1,lp=.2):
@@ -74,19 +75,23 @@ def chirp():return sweep(2600,3600,.07,.35)
 def thunder():t=tt(2.2);return noise(2.2,1.0,.03)*np.exp(-t*1.4)*1.6+np.sin(2*np.pi*(55+15*np.sin(2*np.pi*3*t))*t)*np.exp(-t*1.8)*.6
 def splash():return noise(.45,.8,.5)*np.exp(-tt(.45)*7)
 def blub(f):return sweep(f,f*2.2,.08,.35)
-S=[(2.6,noise(.35,.35,.08)),(12.2,thunder()),(14.6,thunder()*.6),(16.0,pop()),(23.6,sweep(400,1400,.6,.25)),(35.0,pop()),(35.55,splash()),(39.9,splash()*.6),(39.95,pop())]
+S=[(2.6,noise(.35,.35,.08)),(10.4,thunder()*.35),(12.25,pop()*.6),(28.3,pop()),(29.0,splash()),(33.7,splash()*.6),(33.75,pop())]
 for t in np.arange(3.2,4.4,.2):S.append((t,sweep(200,120,.06,.35)))
-for t in (6.7,7.0,8.3,9.6,10.9,16.5,20.0,40.5,42.3,45.0):S+=[(t,chirp()),(t+.12,chirp())]
-for a in (17.2,18.4,19.6,17.75):S.append((a,splash()))
-for t in (18.3,19.3,20.4):S.append((t,sweep(160,90,.12,.6)))       # frog ribbit
-for t in np.arange(35.7,39.6,.17):S.append((t,blub(500+((t*1000)%7)*90)))
+for t in (3.7,4.1,5.6,12.3,14.9,22.8,34.3,36.1,39.0):S+=[(t,chirp()),(t+.12,chirp())]
+for a in SPL:S.append((a,splash()))
+for t in np.arange(29.5,33.4,.17):S.append((t,blub(500+((t*1000)%7)*90)))
 for t,x in S:put(sfx,t,x)
-rainbed=noise(11.0,.45,.6);rainbed*=np.minimum(1,tt(11.0)/.8)*np.minimum(1,(11.0-tt(11.0))/1.0);put(sfx,12.7,rainbed)
+# soft rain: a quiet, filtered bed that fades in and out (and dips under the voice in the mix)
+rd=7.8;rainbed=noise(rd,.22,.35);tr=tt(rd);rainbed*=np.minimum(1,tr/1.2)*np.minimum(1,(rd-tr)/1.4);put(rain_,11.2,rainbed)
+for i in range(60):                                    # a few individual drops on leaves
+    t0=11.6+i*.11+((i*37)%10)*.01
+    if t0<18.4:put(rain_,t0,sweep(1800+(i*131)%900,900,.03,.08))
 def chime(t,ns,gap=.07,g=.5):
     for k,n in enumerate(ns):put(sfx,t+k*gap,mar(fq(n),.7),g)
-chime(20.85,['C6','E6','G6']);chime(29.8,['E6','G6']);chime(40.0,['C6','E6','G6','C7','E7']);chime(44.45,['C6','E6','G6','C7'])
+chime(19.25,['C6','E6','G6']);chime(23.1,['E6','G6']);chime(33.8,['C6','E6','G6','C7','E7']);chime(38.0,['C6','E6','G6','C7'])
 venv=np.convolve(np.abs(voice),np.ones(int(.25*SR))/int(.25*SR),'same');duck=1-np.clip(venv*6,0,.6)
-mix=voice*1.0+music*.24*duck+sfx*.5
+duck2=1-np.clip(venv*10,0,.85)      # the rain all but stops while someone talks
+mix=voice*1.0+music*.2*duck+sfx*.45*duck+rain_*.5*duck2
 mix=mix/max(1,np.abs(mix).max())*.97
 f=int(1.0*SR);mix[-f:]*=np.linspace(1,0,f)
 w=wave.open(OUT+'.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes((mix*32767).astype(np.int16).tobytes());w.close()

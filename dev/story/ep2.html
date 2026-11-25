@@ -32,7 +32,8 @@ svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:vis
 .t2{position:relative;font-size:34px;font-weight:700;margin-top:10px;background:rgba(0,0,0,.18);padding:4px 26px 8px;border-radius:30px}
 .tc{position:absolute;bottom:-10px}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-#dark{background:#4d5966!important}
+#dark{background:#3d5a7a!important}
+#far,#mid{will-change:filter}
 #rain{position:absolute;left:0;top:0;width:1280px;height:720px;pointer-events:none}
 #tub{position:absolute;width:240px;height:120px;left:0;top:0;transform-origin:50% 100%}
 #umb{position:absolute;width:260px;height:120px;transform-origin:50% 100%}
@@ -42,6 +43,7 @@ svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:vis
   <div id="sky"></div><div id="night"></div><div id="dusk"></div><div id="stars"></div><div id="moon"></div>
   <div id="sunW"><div id="rays"></div><div id="sun"></div></div>
   <div class="cl" id="c1" style="width:210px;top:120px"></div><div class="cl" id="c2" style="width:150px;top:210px"></div><div class="cl" id="c3" style="width:120px;top:80px"></div>
+  <canvas id="cld" width="1880" height="720" style="position:absolute;left:-300px;top:0"></canvas>
   <svg class="L" id="rbow" viewBox="-300 0 1880 720"><g id="rbg" fill="none" stroke-width="22" stroke-linecap="round"></g></svg>
   <svg class="L" id="far" viewBox="-300 0 1880 720"><path d="M-300 470 Q-50 360 200 440 T700 420 T1200 400 T1580 440 V720 H-300Z" fill="#a9df86"/>
    <g fill="#8fd16a"><circle cx="90" cy="405" r="34"/><circle cx="130" cy="390" r="44"/><circle cx="175" cy="408" r="32"/><circle cx="1010" cy="380" r="40"/><circle cx="1060" cy="368" r="52"/><circle cx="1112" cy="386" r="36"/></g></svg>
@@ -54,8 +56,8 @@ svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:vis
   <div id="fx"></div>
   <svg class="L" id="pud" viewBox="-300 0 1880 720"></svg><img class="sp" id="bun" src="a/ZART_frog_idle.webp"><div id="tub"></div>
   <img class="sp" id="plant" src="a/PART_tulip_sprout.webp">
-  <img class="sp" id="worm" src="a/ZART_chick_idle.webp">
-  <img class="sp" id="nab" src="a/NART_pose_run.webp"><div id="umb"></div>
+  <img class="sp" id="worm2" src="a/ZART_chick_idle.webp"><img class="sp" id="worm" src="a/ZART_chick_idle.webp">
+  <img class="sp" id="nab2" src="a/NART_pose_run.webp"><img class="sp" id="nab" src="a/NART_pose_run.webp"><div id="umb"></div>
   <img class="sp" id="bf1" src="a/ZART_butterfly_idle.webp"><img class="sp" id="bf2" src="a/ZART_butterfly_happy.webp">
   <div id="dark"></div><div id="fxf"></div><canvas id="rain" width="1280" height="720"></canvas>
   <svg class="L" id="fg" viewBox="-300 0 1880 720"><g id="fgt"></g></svg>
@@ -64,8 +66,8 @@ svg.L{position:absolute;left:-300px;top:0;width:1880px;height:720px;overflow:vis
  <div id="sub"></div>
  <div class="card" id="title"><div class="burst" id="tb"></div><div class="t1" id="tt">نبتة وكتكوت والمطرة</div><div class="t2" id="ts">حكايات جنينة نبتة · الحلقة التانية</div>
   <img class="tc" id="tn" src="a/NART_pose_wave.webp" style="height:300px;right:90px"><img class="tc" id="tw" src="a/ZART_chick_happy.webp" style="height:170px;left:120px"></div>
- <div class="card" id="end"><div class="burst" id="eb"></div><div class="t1">لعبنا في المطرة… واستحمّينا!</div><div class="t2">بعد اللعب في الطين، نغسل ونستحمى</div>
-  <img class="tc" id="en" src="a/NART_pose_cheer.webp" style="height:300px;right:100px"><img class="tc" id="ebn" src="a/ZART_chick_happy.webp" style="height:180px;left:300px"><img class="tc" id="ew" src="a/ZART_frog_happy.webp" style="height:170px;left:70px"></div>
+ <div class="card" id="end"><div class="burst" id="eb"></div><div class="t1" style="font-size:66px">المطرة سقت الزرع… وكتكوت استحمّى!</div><div class="t2">بعد اللعب في الطين، نستحمى</div>
+  <img class="tc" id="en" src="a/NART_pose_cheer.webp" style="height:300px;right:100px"><img class="tc" id="ebn" src="a/ZART_chick_happy.webp" style="height:180px;left:300px"><img class="tc" id="ew" src="a/PART_tulip_ready.webp" style="height:200px;left:70px"></div>
 </div>
 <script>
 const ENV=window.__ENV||[];
@@ -84,127 +86,150 @@ const land=(t,a)=>t>=a&&t<a+.28?Math.sin((t-a)/.28*Math.PI):0;
  let tf='';for(let i=0;i<70;i++){const x=-300+i*27+Math.sin(i*3)*8,hh=10+(i*7)%14;tf+=`<path d="M${x} 562 q4 -${hh} 8 0 q4 -${hh+6} 8 0" fill="#4c9a33"/>`}$('tufts').innerHTML=tf;
  let fl='';[[60,660,'#ff7fb0'],[210,690,'#ffd23f'],[420,668,'#fff'],[860,676,'#ff7fb0'],[1010,694,'#ffd23f'],[1190,664,'#fff'],[-120,680,'#ffd23f'],[1350,690,'#ff7fb0']].forEach(([x,y,c],i)=>{fl+=`<g class="fw" data-i="${i}" transform="translate(${x} ${y})"><rect x="-2" y="0" width="4" height="26" fill="#3f8a2b"/>${[0,72,144,216,288].map(a=>`<circle cx="${Math.cos(a*Math.PI/180)*9}" cy="${Math.sin(a*Math.PI/180)*9}" r="8" fill="${c}"/>`).join('')}<circle r="6" fill="#ffb300"/></g>`});$('flw').innerHTML=fl;
  let fg='';for(let i=0;i<40;i++){const x=-300+i*48+Math.sin(i*5)*12,hh=34+(i*13)%30;fg+=`<path d="M${x} 730 q10 -${hh} 16 -${hh+20} q4 ${hh} 10 ${hh+20}Z" fill="#3f8a2b"/>`}$('fgt').innerHTML=fg}
-const SUBS=[[4.6,6.2,'أهلاً! أنا نبتة'],[13.3,15.8,'الدنيا بتمطر… نلبس إيه؟'],[20.6,23.1,'شربت! هتكبر دلوقتي'],[25.6,29.6,'بنشوف قوس قزح بـ إيه؟'],[29.8,30.8,'تحفة!'],[31.6,34.1,'كتكوت متوسخ! نحمّيه'],[40.2,41.8,'بقى نضيف خالص!'],[42.2,43.8,'كتكوت مبسوط'],[44.6,45.7,'برافو!']];
+// story: the tulip is thirsty -> the rain waters it -> the chick plays in the mud -> a bath -> the tulip blooms
+const SUBS=[[4.6,6.2,'أهلاً! أنا نبتة'],[7.2,9.7,'الزرع عطشان! نسقيه'],[19.0,21.5,'شربت! هتكبر دلوقتي'],[23.2,24.2,'تحفة!'],[25.6,28.1,'كتكوت متوسخ! نحمّيه'],[34.0,35.6,'بقى نضيف خالص!'],[36.0,37.6,'كتكوت مبسوط'],[38.4,39.5,'برافو!']];
 function put(el,cx,foot,h,o={}){const s=el.style;s.height=h+'px';s.left=cx+'px';s.top=(foot-h)+'px';s.opacity=o.op==null?1:o.op;
   s.transform=`translate(-50%,0) rotate(${o.rot||0}deg) scale(${(o.flip?-1:1)*(o.sx||1)},${o.sy||1})`}
 function src(el,n){const u='a/'+n+'.webp';if(el.getAttribute('src')!==u)el.setAttribute('src',u)}
-{let h='';for(let i=0;i<70;i++){const x=(i*173)%1280,y=(i*97)%330,r=1+(i%3);h+=`<i data-i="${i}" style="left:${x}px;top:${y}px;width:${r*2}px;height:${r*2}px"></i>`}$('stars').innerHTML=h}
-// rainbow arcs, puddles, bath tub, leaf umbrella
-{const C=['#ff5a5a','#ff9a3c','#ffd23f','#5fd35b','#39a9ff','#7b6cff'];$('rbg').innerHTML=C.map((c,i)=>`<path id="rb${i}" d="M ${300+i*22} 600 A ${420-i*22} ${400-i*22} 0 0 1 ${1140-i*22} 600" stroke="${c}" opacity=".85"/>`).join('');
- $('pud').innerHTML=[[200,616,110],[1010,618,130]].map(([x,y,w],i)=>`<g id="pd${i}"><ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w*.2}" fill="#6f5b45"/><ellipse cx="${x}" cy="${y-2}" rx="${w*.86}" ry="${w*.15}" fill="#8fc3e8"/><ellipse cx="${x-w*.3}" cy="${y-5}" rx="${w*.25}" ry="${w*.04}" fill="#d8efff"/></g>`).join('');
- $('tub').innerHTML=`<svg viewBox="0 0 240 120" width="240" height="120"><path d="M10 34 H230 Q226 104 190 110 H50 Q14 104 10 34Z" fill="#f5fbff" stroke="#9cc8e6" stroke-width="5"/><rect x="0" y="22" width="240" height="18" rx="9" fill="#d6ecfb" stroke="#9cc8e6" stroke-width="4"/><rect x="48" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><rect x="178" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><ellipse cx="120" cy="30" rx="108" ry="8" fill="#8fd0ff"/></svg>`;
- $('umb').innerHTML=`<svg viewBox="0 0 260 120" width="260" height="120"><path d="M10 92 Q40 4 130 4 Q220 4 250 92 Q220 78 190 92 Q160 78 130 92 Q100 78 70 92 Q40 78 10 92Z" fill="#4fae3a" stroke="#2f7d25" stroke-width="4"/><path d="M130 6 V92 M130 40 L60 80 M130 40 L200 80" stroke="#2f7d25" stroke-width="4" fill="none" opacity=".6"/><path d="M130 92 V118" stroke="#6b4226" stroke-width="7" stroke-linecap="round"/></svg>`}
-const rc=$('rain').getContext('2d');
-const SPL=[17.2,18.4,19.6],END=48.2,PX=200,FX=1010,TX=320;
+// a sprite whose picture changes cross-fades for ~0.12s instead of snapping
+function sprite(A,B,F,t){const a=F(t);src(A,a.pose);put(A,a.x,a.y,a.h,a);let old=null,n=0;
+  for(const d of [.03,.06,.09,.12]){const b=F(t-d);if(b.pose!==a.pose){old=old||b.pose;n++}}
+  if(old){src(B,old);put(B,a.x,a.y,a.h,{...a,op:(a.op==null?1:a.op)*n/4})}else B.style.opacity=0;return a}
+const LIT=['#ff5a5a','#ff9a3c','#ffd23f','#5fd35b','#39a9ff','#7b6cff'];
+{$('rbg').innerHTML=LIT.map((c,i)=>`<path id="rb${i}" d="M ${300+i*22} 600 A ${420-i*22} ${400-i*22} 0 0 1 ${1140-i*22} 600" stroke="${c}" opacity=".8"/>`).join('');
+ $('pud').innerHTML=[[200,616,120],[1000,618,120]].map(([x,y,w],i)=>`<g id="pd${i}"><ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w*.18}" fill="#7a6248"/><ellipse cx="${x}" cy="${y-2}" rx="${w*.88}" ry="${w*.135}" fill="#9fd0ef"/><ellipse cx="${x-w*.3}" cy="${y-5}" rx="${w*.22}" ry="${w*.035}" fill="#e3f4ff"/><g class="rip" data-x="${x}" data-y="${y-2}" data-w="${w*.8}"></g></g>`).join('');
+ $('tub').innerHTML=`<svg viewBox="0 0 240 120" width="240" height="120"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9ecf9"/></linearGradient></defs><path d="M10 34 H230 Q226 104 190 110 H50 Q14 104 10 34Z" fill="url(#tg)" stroke="#9cc8e6" stroke-width="5"/><rect x="0" y="22" width="240" height="18" rx="9" fill="#eaf6ff" stroke="#9cc8e6" stroke-width="4"/><rect x="48" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><rect x="178" y="106" width="14" height="14" rx="5" fill="#9cc8e6"/><ellipse cx="120" cy="30" rx="108" ry="8" fill="#8fd0ff"/></svg>`;
+ $('umb').innerHTML=`<svg viewBox="0 0 260 130" width="260" height="130"><defs><radialGradient id="lg" cx=".5" cy=".2" r=".9"><stop offset="0" stop-color="#7fd35f"/><stop offset="1" stop-color="#3f9a2e"/></radialGradient></defs><path d="M8 96 Q30 8 130 6 Q230 8 252 96 Q222 80 192 94 Q162 80 130 94 Q98 80 68 94 Q38 80 8 96Z" fill="url(#lg)" stroke="#2f7d25" stroke-width="3"/><path d="M130 8 V94 M130 44 Q95 60 62 86 M130 44 Q165 60 198 86 M130 24 Q105 34 84 52 M130 24 Q155 34 176 52" stroke="#2f7d25" stroke-width="3" fill="none" opacity=".55"/><path d="M130 94 V126" stroke="#6b4226" stroke-width="7" stroke-linecap="round"/></svg>`}
+// soft storm clouds: overlapping shaded puffs on a canvas
+const cc=$('cld').getContext('2d');
+// each cloud: a big round body, smaller puffs either side, a flat soft bottom
+const CLD=[[120,150,1.15],[520,110,1.4],[900,170,1.1],[1260,120,1.35],[1640,160,1.2]].map(([x,y,s],c)=>({x,y,s,c,p:[[0,-30,70],[-70,0,52],[70,-5,58],[-125,22,38],[125,20,42],[-30,18,55],[35,20,55]]}));
+function clouds(k,t){cc.clearRect(0,0,1880,720);if(k<=0)return;cc.save();cc.filter='blur(3px)';
+  for(const C of CLD){const side=C.x<940?-1:1,ox=C.x+side*(1-k)*1000+Math.sin(t*.25+C.c)*18,oy=C.y-(1-k)*50;
+    for(const [dx,dy,r0] of C.p){const r=r0*C.s,x=ox+dx*C.s,y=oy+dy*C.s;
+      const g=cc.createRadialGradient(x-r*.25,y-r*.5,r*.1,x,y+r*.1,r*1.05);g.addColorStop(0,`rgba(246,249,252,${k})`);g.addColorStop(.55,`rgba(196,207,220,${k})`);g.addColorStop(1,`rgba(160,174,192,${.95*k})`);
+      cc.fillStyle=g;cc.beginPath();cc.arc(x,y,r,0,Math.PI*2);cc.fill()}
+    cc.fillStyle=`rgba(160,174,192,${.95*k})`;cc.beginPath();cc.ellipse(ox,oy+40*C.s,150*C.s,22*C.s,0,0,Math.PI*2);cc.fill()}
+  cc.restore()}
+// rain: three depths of soft streaks, evenly scattered (golden-ratio spacing, so no stripes)
+const rc=$('rain').getContext('2d'),DROPS=[];{for(let i=0;i<120;i++){const d=i%3;DROPS.push({u:(i*0.6180339)%1,v:(i*0.7548776)%1,d,sp:[520,760,1000][d],len:[12,18,26][d],a:[.3,.42,.55][d],w:[1,1.3,1.7][d]})}}
+function rainDraw(k,t){rc.clearRect(0,0,1280,720);if(k<=0)return;const n=Math.round(DROPS.length*k);
+  for(let i=0;i<n;i++){const p=DROPS[i],y=((p.v*820+t*p.sp)%820)-60,x=((p.u*1380-y*.12)%1380+1380)%1380-50;
+    const g=rc.createLinearGradient(x,y,x-p.len*.12,y+p.len);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(235,245,255,${p.a})`);
+    rc.strokeStyle=g;rc.lineWidth=p.w;rc.lineCap='round';rc.beginPath();rc.moveTo(x,y);rc.lineTo(x-p.len*.12,y+p.len);rc.stroke()}}
+const SPL=[15.4,16.5],END=41.8,PX=200,TX=320,TUL=640;
+const ENVF=f=>ENV[f]||0,mouthAt=t=>{const f=Math.round(t*30);return(ENVF(f-1)+ENVF(f)+ENVF(f+1))/3>.28};
+// ---------- Nabta ----------
+function NAB(t){let x=820,y=600,h=290,pose='NART_front',rot=0,sx=1,sy=1,umb=0;const say=(o,c='NART_front')=>mouthAt(t)?o:c;
+  if(t<4.5){pose='NART_pose_run';x=lerp(-160,860,seg(t,3.1,4.5,eout));y=600-Math.abs(Math.sin(t*16))*14;rot=6}
+  else if(t<6.4){pose='NART_pose_wave';rot=Math.sin(t*7)*3}
+  else if(t<7.1){pose='NART_pose_walk';x=lerp(860,800,seg(t,6.4,7.1));y=600-Math.abs(Math.sin(t*14))*8}
+  else if(t<9.8){pose='NART_face_sad';x=800;rot=Math.sin(t*3)*2}
+  else if(t<11.4){pose='NART_face_think';x=800}
+  else if(t<12.4){pose='NART_face_surprised';x=800;y=600-hop(t,11.5,.35,46)}
+  else if(t<18.6){pose='NART_face_happy';x=800;umb=seg(t,12.2,12.7,eback);y=600-hop(t,12.3,.4,28);rot=Math.sin(t*1.6)*2}
+  else if(t<21.6){pose=say('NART_face_happy');x=800;umb=1-seg(t,18.4,18.9);if(t>19)y=600-hop(t,21,.4,40)}
+  else if(t<24.6){pose=t<22.6?'NART_face_surprised':'NART_pose_cheer';x=800;y=600-hop(t,22.7,.45,60)}
+  else if(t<25.4){pose='NART_face_surprised';x=lerp(800,430,seg(t,24.6,25.4));y=600-Math.abs(Math.sin(t*14))*10}
+  else if(t<28.3){pose=say('NART_face_surprised');x=430}
+  else if(t<29.1){pose='NART_pose_walk';x=lerp(430,570,seg(t,28.3,29.1));y=600-Math.abs(Math.sin(t*14))*8}
+  else if(t<33.6){pose='NART_pose_water';x=570;rot=-10+Math.sin(t*6)*4}
+  else if(t<38){pose=say('NART_face_happy');x=lerp(570,840,seg(t,36.1,37.4));y=600-hop(t,33.8,.4,40)}
+  else{pose=Math.floor(t*2.5)%2?'NART_pose_dance':'NART_pose_cheer';x=840;y=600-Math.abs(Math.sin(t*6))*34;rot=Math.sin(t*6)*4}
+  const tk=ENVF(Math.round(t*30));sy*=1+tk*.06;sx*=1-tk*.025;rot+=tk*Math.sin(t*22)*2;
+  sy*=1+Math.sin(t*2.6)*.012;   // breathing
+  return{pose,x,y,h,rot,sx,sy,umb}}
+// ---------- chick ----------
+function CHK(t){let pose='ZART_chick_idle',x=-120,y=600,h=165,rot=0,sx=1,sy=1,op=1;
+  if(t<3.5)op=0;
+  else if(t<6.4){pose=Math.floor(t*3)%2?'ZART_chick_happy':'ZART_chick_idle';x=lerp(-200,500,seg(t,3.5,5.2,eout));y=600-Math.abs(Math.sin(t*9))*36}
+  else if(t<12.2){pose='ZART_chick_idle';x=500;if(t>7.2&&t<9.8)rot=-4}
+  else if(t<14.6){pose='ZART_chick_happy';x=lerp(500,905,seg(t,12.2,12.9));y=600-hop(t,12.25,.5,60)}   // runs under the leaf
+  else if(t<17.6){pose=t>=SPL[1]?'ZART_chick_dirty':'ZART_chick_happy';x=kf(t,[[14.6,905],[15.4,PX]]);y=600-hop(t,14.8,.6,100)-hop(t,15.9,.6,90);
+    SPL.forEach(a=>{const l=land(t,a);if(l){sy=1-l*.3;sx=1+l*.25}})}
+  else if(t<28.3){pose='ZART_chick_dirty';x=PX+(t>17.6&&t<19?Math.sin(t*3)*16:0);y=600-(t>22.6&&t<23.6?hop(t,22.7,.4,40):0);if(t>24.8&&t<25.6)rot=Math.sin(t*34)*8}
+  else if(t<29.1){pose='ZART_chick_dirty';const k=seg(t,28.6,29.1);x=lerp(PX,TX,k);y=600-Math.sin(k*Math.PI)*110-k*36}
+  else if(t<33.6){pose=t<31.6?'ZART_chick_dirty':'ZART_chick_happy';x=TX+Math.sin(t*5)*8;y=574+Math.sin(t*7)*4;rot=Math.sin(t*5)*6;h=150}
+  else if(t<34.1){pose='ZART_chick_happy';const k=seg(t,33.6,34.1);x=lerp(TX,TX-20,k);y=574-Math.sin(k*Math.PI)*120+k*26}
+  else{pose='ZART_chick_happy';x=TX-20;y=600-Math.abs(Math.sin(t*6+1))*36;rot=Math.sin(t*6)*5}
+  sy*=1+Math.sin(t*3.1+1)*.015;return{pose,x,y,h,rot,sx,sy,op}}
 window.setT=function(t){
-  const f=Math.round(t*30),talk=ENV[f]||0,mouth=((ENV[f-1]||0)+talk+(ENV[f+1]||0))/3>.28;
   // ---------- cards ----------
   const tOut=seg(t,2.5,3.1);$('title').style.transform=`translateY(${-tOut*760}px)`;$('title').style.display=t<3.2?'flex':'none';
   $('tb').style.transform=`rotate(${t*14}deg)`;$('tt').style.transform=`scale(${seg(t,.15,.8,eback)})`;$('ts').style.transform=`scale(${seg(t,.6,1.1,eback)})`;
   $('tn').style.transform=`translateY(${(1-seg(t,.5,1.1,eback))*340-Math.abs(Math.sin(t*5))*14}px)`;$('tw').style.transform=`translateY(${(1-seg(t,.9,1.5,eback))*260-Math.abs(Math.sin(t*6))*20}px)`;
   const eIn=seg(t,END,END+.7,eout);$('end').style.transform=`translateY(${(1-eIn)*760}px)`;$('end').style.display=t>END-.1?'flex':'none';
-  $('eb').style.transform=`rotate(${t*14}deg)`;$('en').style.transform=`translateY(${-Math.abs(Math.sin(t*6))*26}px)`;$('ebn').style.transform=`translateY(${-Math.abs(Math.sin(t*6+1))*20}px)`;$('ew').style.transform=`translateY(${-Math.abs(Math.sin(t*6+2))*24}px)`;
+  $('eb').style.transform=`rotate(${t*14}deg)`;$('en').style.transform=`translateY(${-Math.abs(Math.sin(t*6))*26}px)`;$('ebn').style.transform=`translateY(${-Math.abs(Math.sin(t*6+1))*20}px)`;$('ew').style.transform=`rotate(${Math.sin(t*2)*3}deg)`;
   // ---------- weather ----------
-  const storm=kf(t,[[11.2,0],[12.6,1],[23,1],[24.6,0]]),rain=kf(t,[[12.8,0],[13.4,1],[22.8,1],[23.5,0]]),rb=seg(t,24.4,26.2,eout)*(1-seg(t,46.5,47.5));
-  $('dark').style.opacity=storm*.45;$('stars').style.opacity=0;$('moon').style.opacity=0;$('night').style.opacity=0;$('dusk').style.opacity=0;
-  $('sky').style.filter=`saturate(${1-storm*.6}) brightness(${1-storm*.25})`;
-  $('sunW').style.transform=`translate(0,${storm*160}px)`;$('sunW').style.opacity=1-storm;
-  $('rays').style.transform=`rotate(${t*10}deg)`;
-  // storm clouds slide in over the sun
-  const cg=kf(t,[[11,0],[12.6,1],[23,1],[24.6,0]]);
-  $('c1').style.left=lerp(60+t*7,700,cg)+'px';$('c2').style.left=lerp(520-t*5,930,cg)+'px';$('c3').style.left=lerp(760+t*3,1040,cg)+'px';
-  for(const c of ['c1','c2','c3']){$(c).style.filter=`brightness(${1-cg*.35})`;$(c).style.transform=`scale(${1+cg*.9})`}
-  $('rbow').style.opacity=rb;['rb0','rb1','rb2','rb3','rb4','rb5'].forEach((id,i)=>{const e=$(id),L=e.getTotalLength();e.style.strokeDasharray=L;e.style.strokeDashoffset=L*(1-seg(t,24.4+i*.12,25.9+i*.12,eout))});
-  // puddles grow with the rain
-  ['pd0','pd1'].forEach(id=>{const k=kf(t,[[13,0],[16,1]]);$(id).setAttribute('transform',`translate(${id==='pd0'?PX:FX} 616) scale(${k} ${k}) translate(${-(id==='pd0'?PX:FX)} -616)`);$(id).style.opacity=k?1:0});
+  const storm=kf(t,[[9.6,0],[11.2,1],[18.4,1],[20.4,0]]),rain=kf(t,[[11.3,0],[12.4,.55],[13.4,1],[17.4,1],[18.8,0]]),rb=seg(t,21.6,23.4,eout)*(1-seg(t,40.6,41.6));
+  const mix=(a,b,k)=>{const p=x=>[1,3,5].map(i=>parseInt(x.substr(i,2),16)),A=p(a),B=p(b);return`rgb(${A.map((v,i)=>Math.round(lerp(v,B[i],k))).join(',')})`};
+  $('sky').style.background=`linear-gradient(${mix('#69bdf0','#7d93ad',storm)} 0%,${mix('#a9defa','#a7b6c6',storm)} 50%,${mix('#e8f8ff','#c9d3dc',storm)} 72%)`;
+  $('dark').style.opacity=storm*.16;$('stars').style.opacity=0;$('moon').style.opacity=0;$('night').style.opacity=0;$('dusk').style.opacity=0;
+  $('sunW').style.opacity=1-storm;$('sunW').style.transform=`translateY(${storm*60}px)`;$('rays').style.transform=`rotate(${t*10}deg)`;
+  for(const c of ['c1','c2','c3'])$(c).style.opacity=1-storm;
+  $('c1').style.left=(60+t*7)+'px';$('c2').style.left=(520-t*5)+'px';$('c3').style.left=(760+t*3)+'px';
+  clouds(storm,t);
+  $('gnd').style.filter=`saturate(${1-storm*.25}) brightness(${1-storm*.1})`;
+  $('rbow').style.opacity=rb;LIT.forEach((_,i)=>{const e=$('rb'+i),L=e.getTotalLength();e.style.strokeDasharray=L;e.style.strokeDashoffset=L*(1-seg(t,21.6+i*.12,23.1+i*.12,eout))});
+  ['pd0','pd1'].forEach((id,j)=>{const k=kf(t,[[12.6,0],[14.6,1]]),X=j?1000:PX;$(id).setAttribute('transform',`translate(${X} 616) scale(${k} ${k}) translate(${-X} -616)`);$(id).style.opacity=k?1:0});
+  // ripples in the puddles while it rains
+  document.querySelectorAll('.rip').forEach((g,j)=>{let h='';if(rain>0){const X=+g.dataset.x,Y=+g.dataset.y,W=+g.dataset.w;for(let i=0;i<6;i++){const k=((t*1.3+i/6+j*.3)%1),rx=X+(((i*0.618+j*.3)%1)-.5)*W*1.4;h+=`<ellipse cx="${rx}" cy="${Y+((i%3)-1)*4}" rx="${4+k*22}" ry="${1.5+k*5}" fill="none" stroke="#fff" stroke-width="1.6" opacity="${(1-k)*.8*rain}"/>`}}g.innerHTML=h});
   // ---------- camera ----------
-  const CAM=[[3,1.12,560,380],[6.4,1,640,360],[11,1,640,360],[12.4,1.02,640,340],[16.4,1.02,640,340],[17,1.35,420,470],[20.2,1.35,420,470],[20.6,1.3,680,450],[23.2,1.3,680,450],[24.2,1,640,330],[30.9,1,640,330],[31.6,1.3,330,450],[34.2,1.3,330,450],[35,1.35,450,450],[39.6,1.35,450,450],[40.2,1.45,360,460],[42,1.45,360,460],[43.4,1.15,560,410],[44,1.15,560,410],[44.6,1.08,600,380],[48,1.1,600,380]];
+  const CAM=[[3,1.12,560,380],[6.4,1,640,360],[7.0,1.35,700,450],[9.8,1.35,700,450],[10.8,1,640,330],[14.4,1,640,330],[15,1.3,330,460],[17.6,1.3,330,460],[18.6,1.3,700,440],[21.6,1.3,700,440],[22.4,1,640,330],[24.4,1,640,330],[25.2,1.35,330,460],[28.2,1.35,330,460],[29,1.35,450,450],[33.4,1.35,450,450],[34,1.45,360,460],[35.8,1.45,360,460],[37.4,1.12,600,400],[41.8,1.15,620,390]];
   const z=kf(t,CAM.map(c=>[c[0],c[1]])),cx=kf(t,CAM.map(c=>[c[0],c[2]])),cy=kf(t,CAM.map(c=>[c[0],c[3]]));
-  let shx=0,shy=0;if(t>=12.2&&t<12.9){const k=1-(t-12.2)/.7;shx=Math.sin(t*80)*10*k;shy=Math.cos(t*60)*8*k}
   const fxw=cl(cx,640/z,1280-640/z),fyw=cl(cy,360/z,720-360/z);
-  $('cam').style.transform=`translate(${640-fxw*z+shx}px,${360-fyw*z+shy}px) scale(${z})`;
+  $('cam').style.transform=`translate(${640-fxw*z}px,${360-fyw*z}px) scale(${z})`;
   $('far').style.transform=`translateX(${(fxw-640)*.35}px)`;$('mid').style.transform=`translateX(${(fxw-640)*.18}px)`;$('fg').style.transform=`translateX(${-(fxw-640)*.5}px) translateY(${(z-1)*40}px)`;
-  document.querySelectorAll('.fw').forEach(g=>{const i=+g.dataset.i,b=g.getAttribute('data-b')||g.getAttribute('transform');g.setAttribute('data-b',b);g.setAttribute('transform',b+` rotate(${Math.sin(t*2+i)*(6+storm*10)})`)});
-  // ---------- Nabta ----------
-  let nx=820,ny=600,nh=290,pose='NART_front',rot=0,sx=1,sy=1,umb=0;
-  const say=(open,shut='NART_front')=>mouth?open:shut;
-  if(t<4.5){pose='NART_pose_run';nx=lerp(-160,820,seg(t,3.1,4.5,eout));ny=600-Math.abs(Math.sin(t*16))*14;rot=6}
-  else if(t<6.6){pose='NART_pose_wave';rot=Math.sin(t*7)*3}
-  else if(t<11.2){pose=Math.floor(t*2.4)%2?'NART_pose_jump':'NART_pose_cheer';nx=820+Math.sin((t-6.6)*1.3)*60;ny=600-Math.abs(Math.sin((t-6.6)*4.4))*60}
-  else if(t<13.2){pose='NART_face_surprised';ny=600-hop(t,12.25,.35,50)}
-  else if(t<15.9){pose=say('NART_face_surprised','NART_face_think');rot=Math.sin(t*4)*2}
-  else if(t<20.4){pose='NART_face_happy';umb=seg(t,15.9,16.4,eback);ny=600-hop(t,16,.4,30);nx=820}
-  else if(t<23.3){pose=say('NART_face_happy');umb=1;nx=lerp(820,780,seg(t,20.4,21))}
-  else if(t<24.4){pose='NART_face_happy';umb=1-seg(t,23.3,23.8);nx=780}
-  else if(t<31.1){pose=t<25.5?'NART_pose_cheer':say('NART_face_surprised','NART_face_think');nx=780;ny=600-hop(t,24.5,.45,60);if(t>27.6&&t<29.7)pose='NART_face_think';if(t>29.7)pose='NART_pose_cheer'}
-  else if(t<34.3){pose=say('NART_face_surprised');nx=lerp(780,420,seg(t,31.1,31.9));ny=600-hop(t,31.2,.3,40)}
-  else if(t<35.2){pose='NART_pose_walk';nx=lerp(420,570,seg(t,34.3,35.1));ny=600-Math.abs(Math.sin(t*14))*8}
-  else if(t<39.8){pose='NART_pose_water';nx=570;rot=-10+Math.sin(t*6)*4}
-  else if(t<44.4){pose=say('NART_face_happy');nx=lerp(570,840,seg(t,41.9,43.2));ny=600-hop(t,39.9,.4,40)}
-  else{pose=Math.floor(t*2.5)%2?'NART_pose_dance':'NART_pose_cheer';nx=840;ny=600-Math.abs(Math.sin(t*6))*34;rot=Math.sin(t*6)*4}
-  sy*=1+talk*.06;sx*=1-talk*.025;rot+=talk*Math.sin(t*22)*2;
-  src($('nab'),pose);put($('nab'),nx,ny,nh,{rot,sx,sy});
-  const U=$('umb');U.style.opacity=umb;U.style.left=(nx-130)+'px';U.style.top=(ny-nh-98)+'px';U.style.transform=`scale(${umb}) rotate(${Math.sin(t*2)*4}deg)`;
-  // ---------- chick ----------
-  let cs='ZART_chick_idle',cxp=-120,cyp=600,ch=165,crot=0,csx=1,csy=1,cop=1,cflip=false;
-  if(t<6.6)cop=0;
-  else if(t<11.2){cs=Math.floor(t*2.4+1)%2?'ZART_chick_happy':'ZART_chick_idle';cxp=t<7.6?lerp(-120,560,seg(t,6.6,7.6,eout)):560+Math.sin((t-7.6)*1.3+1)*70;cyp=600-Math.abs(Math.sin((t-6.6)*4.4+1))*70}
-  else if(t<16.4){cs='ZART_chick_idle';cxp=560;crot=t<13?Math.sin(t*30)*4:0;cyp=600-hop(t,12.25,.3,40)}
-  else if(t<20.6){cs=t>=SPL[1]?'ZART_chick_dirty':'ZART_chick_happy';cxp=kf(t,[[16.4,560],[17.2,PX]]);
-    cyp=600-hop(t,16.6,.6,80)-hop(t,17.8,.6,90)-hop(t,19,.6,90);SPL.forEach(a=>{const l=land(t,a);if(l){csy=1-l*.3;csx=1+l*.25}})}
-  else if(t<35.2){cs='ZART_chick_dirty';cxp=PX+(t>20.6&&t<23?Math.sin(t*3)*20:0);cyp=600-(t>24.5&&t<26?hop(t,24.6,.4,40):0);if(t>31.4&&t<32.2)crot=Math.sin(t*30)*6}
-  else if(t<35.6){cs='ZART_chick_dirty';const k=seg(t,35.2,35.6);cxp=lerp(PX,TX,k);cyp=600-Math.sin(k*Math.PI)*110-k*36}
-  else if(t<39.8){cs=t<37.5?'ZART_chick_dirty':'ZART_chick_happy';cxp=TX+Math.sin(t*5)*8;cyp=574+Math.sin(t*7)*4;crot=Math.sin(t*5)*6;ch=150}
-  else if(t<40.3){cs='ZART_chick_happy';const k=seg(t,39.8,40.3);cxp=lerp(TX,TX-20,k);cyp=574-Math.sin(k*Math.PI)*120+k*26}
-  else{cs='ZART_chick_happy';cxp=TX-20;cyp=600-Math.abs(Math.sin(t*6+1))*36;crot=Math.sin(t*6)*5}
-  src($('worm'),cs);put($('worm'),cxp,cyp,ch,{rot:crot,sx:csx,sy:csy,op:cop});
-  // ---------- frog ----------
-  let fs='ZART_frog_idle',fxp=FX,fyp=640,fh=150,fop=0,frot=0;
-  if(t>=17.6&&t<23.4){fop=1;fs=Math.floor(t*2)%2?'ZART_frog_happy':'ZART_frog_idle';fyp=lerp(680,612,seg(t,17.6,18.1,eback))-(t>18.3?Math.abs(Math.sin((t-18.3)*4))*60:0)}
-  else if(t>=23.4&&t<44.4){fop=1;fs='ZART_frog_idle';fyp=612;if(t>40.2&&t<44)fs='ZART_frog_happy'}
-  else if(t>=44.4){fop=1;fs='ZART_frog_happy';fyp=612-Math.abs(Math.sin(t*6+2))*40}
-  src($('bun'),fs);put($('bun'),fxp,fyp,fh,{op:fop,rot:frot});
+  // depth of field: the background softens in close-ups
+  $('far').style.filter=`blur(${(z-1)*6}px)`;$('mid').style.filter=`blur(${(z-1)*3.5}px)`;$('cld').style.filter=`blur(${(z-1)*5}px)`;
+  document.querySelectorAll('.fw').forEach(g=>{const i=+g.dataset.i,b=g.getAttribute('data-b')||g.getAttribute('transform');g.setAttribute('data-b',b);g.setAttribute('transform',b+` rotate(${Math.sin(t*2+i)*(6+storm*6)})`)});
+  // ---------- characters ----------
+  const N=sprite($('nab'),$('nab2'),NAB,t);
+  const U=$('umb');U.style.opacity=N.umb;U.style.left=(N.x-130)+'px';U.style.top=(N.y-N.h-104)+'px';U.style.transform=`scale(${N.umb}) rotate(${Math.sin(t*2)*4}deg)`;
+  const C=sprite($('worm'),$('worm2'),CHK,t);
+  $('bun').style.opacity=0;
   // ---------- tulip ----------
-  let ps='PART_tulip_sprout',ph=120,psx=1,psy=1,prot=Math.sin(t*2)*1.5+storm*Math.sin(t*5)*4;
-  if(t>=20.8){ps='PART_tulip_grow';ph=230;psx=psy=.55+.45*seg(t,20.8,21.8,eout)}
-  if(t>=44.4){ps='PART_tulip_ready';ph=280;psx=psy=.6+.4*seg(t,44.4,45,eback)}
-  src($('plant'),ps);put($('plant'),640,604,ph,{sx:psx,sy:psy,rot:prot});
+  let ps='PART_tulip_wilt',ph=220,psx=1,psy=1,prot=Math.sin(t*2)*1.5;
+  if(t<10.8)prot=-6+Math.sin(t*1.5)*2;                                                          // drooping
+  if(t>=13.2&&t<19.2){prot=lerp(-6,0,seg(t,13.2,17))+Math.sin(t*5)*2}                            // drinking the rain, straightening up
+  if(t>=19.2){ps='PART_tulip_grow';ph=lerp(220,250,seg(t,19.2,20));psx=psy=.85+.15*seg(t,19.2,19.7,eback)}
+  if(t>=38){ps='PART_tulip_ready';ph=290;psx=psy=.6+.4*seg(t,38,38.6,eback)}
+  src($('plant'),ps);put($('plant'),TUL,604,ph,{sx:psx,sy:psy,rot:prot});
   // ---------- tub ----------
-  const tin=seg(t,34.4,35.1,eback)*(1-seg(t,41,41.6));const T=$('tub');T.style.left=(TX-120)+'px';T.style.top=(600-112)+'px';T.style.opacity=tin>0?1:0;T.style.transform=`scale(${tin})`;
+  const tin=seg(t,28.2,28.9,eback)*(1-seg(t,35.2,35.8));const T=$('tub');T.style.left=(TX-120)+'px';T.style.top=(600-112)+'px';T.style.opacity=tin>0?1:0;T.style.transform=`scale(${tin})`;
   // ---------- butterflies (only in the sun) ----------
-  put($('bf1'),kf(t,[[3,1400],[7,980],[11,500],[12.4,-200],[25,-200],[28,520],[48,560]]),250+Math.sin(t*2.2)*40+Math.sin(t*9)*6,70,{sx:1+Math.sin(t*26)*.12,rot:Math.sin(t*3)*8});
-  put($('bf2'),kf(t,[[24.5,1500],[28,780],[48,760]]),300+Math.sin(t*2.6+1)*36,64,{sx:1+Math.sin(t*28)*.12,rot:Math.sin(t*3+2)*8,op:t>24.4?1:0});
+  put($('bf1'),kf(t,[[3,1400],[7,980],[9.6,700],[10.8,-200],[22,-200],[25,520],[42,560]]),250+Math.sin(t*2.2)*40+Math.sin(t*9)*6,70,{sx:1+Math.sin(t*26)*.12,rot:Math.sin(t*3)*8});
+  put($('bf2'),kf(t,[[21.8,1500],[25,780],[42,760]]),300+Math.sin(t*2.6+1)*36,64,{sx:1+Math.sin(t*28)*.12,rot:Math.sin(t*3+2)*8,op:t>21.8?1:0});
   // ---------- shadows ----------
-  const shd=(x,w,air,op=1)=>`<div class="sh" style="left:${x-w/2}px;top:592px;width:${w}px;opacity:${cl(1-air/260,.25,1)*op};transform:scale(${cl(1-air/400,.5,1)})"></div>`;
-  $('shadows').innerHTML=shd(nx,170,600-ny)+(cop&&!(t>=35.2&&t<40.3)?shd(cxp,110,600-cyp):'');
+  const shd=(x,w,air)=>`<div class="sh" style="left:${x-w/2}px;top:592px;width:${w}px;opacity:${cl(1-air/260,.25,1)};transform:scale(${cl(1-air/400,.5,1)})"></div>`;
+  $('shadows').innerHTML=shd(N.x,170,600-N.y)+(C.op&&!(t>=28.6&&t<34.1)?shd(C.x,110,600-C.y):'')+shd(TUL,150,0);
   // ---------- particles ----------
   let fx='',ff='';
   const P=(x,y,s,html,op=1,rot=0)=>`<div class="p" style="left:${x}px;top:${y}px;opacity:${op};transform:translate(-50%,-50%) scale(${s}) rotate(${rot}deg);font-size:40px">${html}</div>`;
   const dot=(x,y,r,c,op=1)=>`<div class="p" style="left:${x-r}px;top:${y-r}px;width:${r*2}px;height:${r*2}px;border-radius:50%;background:${c};opacity:${op}"></div>`;
   const bub=(x,y,html,s=1)=>`<div class="p" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) scale(${s});background:#fff;border-radius:50%;width:96px;height:84px;display:grid;place-items:center;font-size:46px;box-shadow:0 5px 0 rgba(0,0,0,.12)">${html}</div>`+dot(x+12,y+56,9,'#fff')+dot(x+18,y+74,5,'#fff');
-  if(t>3.1&&t<4.7)for(let i=0;i<5;i++){const k=((t*3+i/5)%1);ff+=dot(nx-70-k*60,596-k*26,8+k*10,'#fff',(1-k)*.6)}
-  // lightning flash
+  if(t>3.1&&t<4.7)for(let i=0;i<5;i++){const k=((t*3+i/5)%1);ff+=dot(N.x-70-k*60,596-k*26,8+k*10,'#fff',(1-k)*.6)}
+  // thirsty tulip: a little empty-drop bubble; Nabta looks up and wonders
+  if(t>=7.4&&t<10.6)fx+=bub(TUL+70,370+Math.sin(t*4)*4,'💧',seg(t,7.4,7.8,eback));
+  if(t>=9.8&&t<11.4)fx+=bub(N.x+80,N.y-340+Math.sin(t*4)*4,'☁️',seg(t,9.8,10.2,eback));
+  // drops landing on the tulip's leaves
+  if(rain>0)for(let i=0;i<4;i++){const k=((t*1.6+i/4)%1);ff+=dot(TUL-50+i*34,470+k*120,4,'#bfe6ff',(1-k)*rain)}
   // mud splashes
   SPL.forEach(a=>{if(t>=a&&t<a+.6){const k=(t-a)/.6;for(let i=0;i<10;i++){const an=Math.PI+i/9*Math.PI;ff+=dot(PX+Math.cos(an)*110*eout(k),600+Math.sin(an)*90*eout(k)+k*k*60,9*(1-k)+3,i%2?'#8a6a4a':'#9cd2f5',1-k)}}});
-  if(t>=17.7&&t<18.3){const k=(t-17.7)/.6;for(let i=0;i<8;i++){const an=Math.PI+i/7*Math.PI;ff+=dot(FX+Math.cos(an)*90*eout(k),606+Math.sin(an)*70*eout(k),7*(1-k)+2,'#9cd2f5',1-k)}}
-  // rain drops on the tulip, then growth sparkles
-  for(const a of [20.8,44.4]){if(t>=a&&t<a+1){const k=(t-a),n=a>40?12:7,R=a>40?150:90;for(let i=0;i<n;i++){const an=i/n*Math.PI*2+a;ff+=P(640+Math.cos(an)*R*eout(k),500+Math.sin(an)*R*.8*eout(k),1.1*(1-k)+.2,'✨',1-k)}}}
-  // rainbow question: eyes bubble while kids answer
-  if(t>=27.6&&t<29.8)fx+=bub(nx+80,ny-340+Math.sin(t*4)*4,'👀',seg(t,27.6,28,eback));
-  if(t>=31.4&&t<32.6)ff+=P(nx+70,ny-300,1+Math.sin(t*30)*.1,'❗');
-  // bath: bubbles and water from Nabta's can
-  if(t>=35.6&&t<39.8){for(let i=0;i<9;i++){const k=((t-35.6)*.7+i/9)%1;ff+=`<div class="p" style="left:${TX-90+((i*53)%180)+Math.sin(t*3+i)*10}px;top:${480-k*170}px;width:${18+(i%3)*10}px;height:${18+(i%3)*10}px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:radial-gradient(circle at 30% 30%,#fff,rgba(190,230,255,.35));opacity:${1-k}"></div>`}
-    for(let i=0;i<8;i++){const k=((t-35.6)*1.8+i/8)%1;ff+=dot(lerp(nx-90,TX+20,k)+Math.sin(i*7)*8,lerp(ny-150,520,k*k),5,'#39a9ff',1-k*.3)}
+  // the chick shakes off mud when Nabta notices
+  if(t>=24.8&&t<25.6){const k=(t-24.8)/.8;for(let i=0;i<8;i++){const an=i/8*Math.PI*2;ff+=dot(C.x+Math.cos(an)*80*k,C.y-80+Math.sin(an)*60*k+k*k*40,6,'#8a6a4a',1-k)}}
+  for(const a of [19.2,38]){if(t>=a&&t<a+1){const k=(t-a),n=a>30?12:8,R=a>30?150:100;for(let i=0;i<n;i++){const an=i/n*Math.PI*2+a;ff+=P(TUL+Math.cos(an)*R*eout(k),470+Math.sin(an)*R*.8*eout(k),1.1*(1-k)+.2,'✨',1-k)}}}
+  if(t>=25.2&&t<26.2)ff+=P(N.x+70,N.y-300,1+Math.sin(t*30)*.1,'❗');
+  // bath
+  if(t>=29.3&&t<33.6){for(let i=0;i<9;i++){const k=((t-29.3)*.7+i/9)%1;ff+=`<div class="p" style="left:${TX-90+((i*53)%180)+Math.sin(t*3+i)*10}px;top:${480-k*170}px;width:${18+(i%3)*10}px;height:${18+(i%3)*10}px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:radial-gradient(circle at 30% 30%,#fff,rgba(190,230,255,.35));opacity:${1-k}"></div>`}
+    for(let i=0;i<8;i++){const k=((t-29.3)*1.8+i/8)%1;ff+=dot(lerp(N.x-90,TX+20,k)+Math.sin(i*7)*8,lerp(N.y-150,520,k*k),5,'#39a9ff',1-k*.3)}
     for(let i=0;i<5;i++)ff+=`<div class="p" style="left:${TX-80+i*38}px;top:${470+Math.sin(t*4+i)*6}px;width:${50+(i%2)*16}px;height:${36+(i%2)*10}px;border-radius:50%;background:#fff;opacity:.95"></div>`}
-  if(t>=39.8&&t<40.8){const k=(t-39.8);for(let i=0;i<10;i++){const an=i/10*Math.PI*2;ff+=P(TX+Math.cos(an)*110*eout(k),470+Math.sin(an)*90*eout(k),1-k*.6,'✨',1-k)}}
-  if(t>=42.2&&t<END)for(let i=0;i<3;i++){const k=((t-42.2)*.8+i/3)%1;ff+=P(cxp+Math.sin(i*9+k*4)*36,cyp-170-k*110,.7+k*.4,'💛',1-k)}
-  if(t>=44.6&&t<END+.5){const cols=['#ff5a7a','#ffd23f','#4fd36a','#39a9ff','#b884f0','#ff9a3c'];for(let i=0;i<60;i++){const s0=(i*97)%1280,sp=160+(i*53)%200,y=-40+((t-44.6)*sp+(i*131)%700)%800,x=s0+Math.sin(t*3+i)*30;ff+=`<div class="p" style="left:${x}px;top:${y}px;width:12px;height:16px;border-radius:3px;background:${cols[i%6]};transform:rotate(${t*200+i*40}deg)"></div>`}}
+  if(t>=33.6&&t<34.6){const k=(t-33.6);for(let i=0;i<10;i++){const an=i/10*Math.PI*2;ff+=P(TX+Math.cos(an)*110*eout(k),470+Math.sin(an)*90*eout(k),1-k*.6,'✨',1-k)}}
+  if(t>=36&&t<END)for(let i=0;i<3;i++){const k=((t-36)*.8+i/3)%1;ff+=P(C.x+Math.sin(i*9+k*4)*36,C.y-170-k*110,.7+k*.4,'💛',1-k)}
+  if(t>=38.4&&t<END+.5){const cols=['#ff5a7a','#ffd23f','#4fd36a','#39a9ff','#b884f0','#ff9a3c'];for(let i=0;i<60;i++){const s0=(i*97)%1280,sp=160+(i*53)%200,y=-40+((t-38.4)*sp+(i*131)%700)%800,x=s0+Math.sin(t*3+i)*30;ff+=`<div class="p" style="left:${x}px;top:${y}px;width:12px;height:16px;border-radius:3px;background:${cols[i%6]};transform:rotate(${t*200+i*40}deg)"></div>`}}
   $('fx').innerHTML=fx;$('fxf').innerHTML=ff;
-  $('flash').style.opacity=t>=12.2&&t<12.5?(1-(t-12.2)/.3)*.8:(t>=14.6&&t<14.8?(1-(t-14.6)/.2)*.5:(t>=44.4&&t<44.7?(1-(t-44.4)/.3)*.4:0));
-  // rain (drawn on a canvas in screen space)
-  rc.clearRect(0,0,1280,720);if(rain>0){rc.strokeStyle=`rgba(220,235,255,${.75*rain})`;rc.lineWidth=2.4;rc.beginPath();
-    for(let i=0;i<160;i++){const x=((i*157.3+t*120)%1380)-50,y=((i*91.7+t*900)%800)-60;rc.moveTo(x,y);rc.lineTo(x-7,y+26)}rc.stroke();
-    rc.fillStyle=`rgba(230,242,255,${.6*rain})`;for(let i=0;i<24;i++){const k=((t*2.2+i/24)%1),x=(i*211)%1280,y=640+((i*37)%70);rc.beginPath();rc.ellipse(x,y,4+k*14,2+k*4,0,0,Math.PI*2);rc.globalAlpha=(1-k)*rain;rc.fill()}rc.globalAlpha=1}
+  $('flash').style.opacity=t>=38&&t<38.3?(1-(t-38)/.3)*.4:0;
+  rainDraw(rain,t);
   const s=SUBS.find(s=>t>=s[0]&&t<s[1]);$('sub').innerHTML=s&&t>3.2&&t<END?`<span style="transform:scale(${.85+.15*seg(t,s[0],s[0]+.2,eback)})">${s[2]}</span>`:'';
 };
 setT(0);
